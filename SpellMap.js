@@ -190,7 +190,7 @@ var conjuration = [
 	["Mage Hand",0],
 	["Poison Spray",0],
 	["Sword Burst",0],
-    ["Conjure Elemental Mote",1],
+    // ["Conjure Elemental Mote",1], //AA
     ["Find Familiar",1],
 	["Fog Cloud",1],
 	["Grease",1],
@@ -259,7 +259,7 @@ var divination = [
     ["Detect Magic",1],
     ["Gift of Alacrity",1],
 	["Identify",1],
-    ["Magewrights Incantation",1],
+    // ["Magewrights Incantation",1], //AA
 	["Augury",2],
     ["Borrowed Knowledge", 2],
     ["Detect Thoughts",2],
@@ -292,15 +292,15 @@ var enchantment = [
 	["Tashas Hideous Laughter",1],
     ["Silvery Barbs", 1],
 	["Crown of Madness",2],
-	["Gift of Gab",2],
+	//["Gift of Gab",2], //AI
 	["Hold Person",2],
-	["Jims Glowing Coin",2],
+	// ["Jims Glowing Coin",2], //AI
 	["Suggestion",2],
 	["Tashas Mind Whip",2],
 	["Catnap",3],
 	["Enemies Abound",3],
-	["Fast Friends",3],
-	["Incite Greed",3],
+	//["Fast Friends",3], //AI
+	//["Incite Greed",3], //AI
 	["Charm Monster",4],
 	["Confusion",4],
     ["Raulothims Psychic Lance", 5],
@@ -340,7 +340,7 @@ var evocation = [
     ["Concussive Burst",1],
 	["Earth Tremor",1],
 	["Frost Fingers",1],
-	["Jims Magic Missile",1],
+	// ["Jims Magic Missile",1], //AI
 	["Magic Missile",1],
 	["Tashas Caustic Brew",1],
 	["Thunderwave",1],
@@ -408,7 +408,7 @@ var illusion = [
 	["Minor Illusion",0],
 	["Color Spray",1],
 	["Disguise Self",1],
-	["Distort Value",1],
+	// ["Distort Value",1], //AI
 	["Illusory Script",1],
 	["Silent Image",1],
 	["Blur",2],
@@ -491,14 +491,14 @@ var transmutation = [
 	["Prestidigitation",0],
 	["Shape Water",0],
     ["Catapult",1],
-    ["Cause Damage",1],
-    ["Emergency Repair",1],
+    // ["Cause Damage",1], //AA
+    // ["Emergency Repair",1], //AA
 	["Expeditious Retreat",1],
 	["Feather Fall",1],
 	["Jump",1],
     ["Longstrider",1],
     ["Magnify Gravity",1],
-    ["Repair Damage",1],
+    // ["Repair Damage",1], //AA
 	["Alter Self",2],
 	["Darkvision",2],
 	["Dragons Breath",2],
@@ -522,9 +522,9 @@ var transmutation = [
 	["Fly",3],
 	["Gaseous Form",3],
     ["Haste",3],
-    ["Mass Emergency Repairs",3],
+    // ["Mass Emergency Repairs",3], //AA
     ["Slow",3],
-    ["Transmute Weapon",3],
+    // ["Transmute Weapon",3], //AA
 	["Tiny Servant",3],
 	["Water Breathing",3],
 	["Control Water",4],
@@ -534,7 +534,7 @@ var transmutation = [
 	["Stone Shape",4],
 	["Animate Objects",5],
     ["Control Winds",5],
-    ["Mass Repair Damage",5],
+    // ["Mass Repair Damage",5], //AA
 	["Passwall",5],
 	["Skill Empowerment",5],
     ["Telekinesis",5],
@@ -542,7 +542,7 @@ var transmutation = [
 	["Transmute Rock",5],
 	["Create Homunculus",6],
     ["Disintegrate",6],
-    ["Fix",6],
+    // ["Fix",6], //AA
 	["Flesh to Stone",6],
 	["Investiture of Flame",6],
 	["Investiture of Ice",6],
@@ -551,14 +551,14 @@ var transmutation = [
 	["Move Earth",6],
 	["Tashas Otherworldly Guise",6],
     ["Tensers Transformation",6],
-    ["Wreck",6],
+    // ["Wreck",6],
 	["Create Magen",7],
     ["Draconic Transformation",7],
 	["Etherealness",7],
 	["Reverse Gravity",7],
 	["Sequester",7],
     ["Control Weather",8],
-    ["Mass Fix",9],
+    // ["Mass Fix",9], //AA
 	["Mass Polymorph",9],
 	["Shapechange",9],
 	["Time Stop",9],
