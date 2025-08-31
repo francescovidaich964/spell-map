@@ -11,21 +11,24 @@
 			<h2><u>Controls</u></h2>
 			<p><b>Mouse:</b> Interact</p>
 			<p><b>Arrows:</b> Move highlighted spells mode</p>
-			<p><b>X:</b> Toggle "add" mode</p>
-			<p><b>Z:</b> Toggle "token" mode</p>
-			<p><b>C:</b> Toggle "highlight" mode</p>
+			<p><b>Z:</b> Toggle "add" mode</p>
+			<p><b>X:</b> Toggle "delete" mode</p>
+			<p><b>C:</b> Toggle "token" mode</p>
+			<p><b>V:</b> Toggle "highlight" mode</p>
 			<p><b>S:</b> Save a spell map</p>
 			<p><b>O:</b> Open a saved spell map</p>
 		</div>
 		<div id="modes">
 			<h2><u>Modes</u></h2>
-			<p><b>Move:</b> Hold and drag to move spell icons. Cursor will be four black arrows in this mode</p>
+			<p><b>Move:</b> Hold and drag to move spell nodes. Cursor will be four black arrows in this mode</p>
 			<p><b>Add:</b> Toggle connections between spells of the same level. Cursor will be green plus in this mode</p>
-			<p><b>Token:</b> Add or remove a token from a spell icon. Cursor will be hexagon in this mode</p>
+			<p><b>Delete:</b> Delete all connections linked to a spell node. Cursor will be red cross in this mode</p>
+			<p><b>Token:</b> Add or remove a token from a spell node. Cursor will be hexagon in this mode</p>
 			<p><b>Highlight:</b> Drag to highlight multiple spells (blue text), which can be moved together in "move" mode. Cursor will be four blue arrows in this mode</p>
 		</div>
 		<canvas id="SpellMap" width="1200" height="980" style="border:5px solid #000;"></canvas>
 		<script src="SpellMap.js"></script>
 		<h5>&copy; 2018, Calvin McHenry</h5>
+		<h5>&copy; 2025, Francesco Vidaich</h5>
 	</body>
 </html>

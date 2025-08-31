@@ -834,6 +834,19 @@ function draw() {
         ctx.stroke();
         ctx.lineWidth = 1;
         ctx.strokeStyle = "black";
+    } else if (mode == "delete") {
+	    ctx.strokeStyle = "red";
+	    ctx.lineWidth = 3;
+	    ctx.beginPath();
+	    ctx.moveTo(mouseX - 7, mouseY - 7);
+	    ctx.lineTo(mouseX + 7, mouseY + 7);
+	    ctx.stroke();
+	    ctx.beginPath();
+	    ctx.moveTo(mouseX + 7, mouseY - 7);
+	    ctx.lineTo(mouseX - 7, mouseY + 7);
+	    ctx.stroke();
+	    ctx.lineWidth = 1;
+	    ctx.strokeStyle = "black";
     } else {
         ctx.fillStyle = "orange";
         ctx.beginPath();
@@ -945,6 +958,15 @@ document.onmousedown = function(e) {
                         addSelect = "";
                     }
                 }
+            } else if (mode == "delete" && spells[i].y < 600) {
+			    // Delete all connections for this spell
+			    for (j = 0; j < spells.length; j++) {
+			        var index = spells[j].whitelist.indexOf(spells[i].name);
+			        if (index >= 0) {
+			            spells[j].whitelist.splice(index, 1);
+			        }
+			    }
+			    spells[i].whitelist = [];
             } else if (mode == "token" && spells[i].y < 600) {
                 spells[i].token = !spells[i].token;
             }
@@ -1031,25 +1053,33 @@ document.onkeydown = function(e) {
     var key = e.keyCode;
     e.preventDefault();
 
-    if (mode != "add" && key === 88) { //x
+    if (mode != "add" && key === 90) { //z
         mode = "add";
-    } else if (mode == "add" && key === 88) {
+    } else if (mode == "add" && key === 90) {
         mode = "move";
         addSelect = "";
     }
 
-    if (mode != "token" && key === 90) { //z
+    if (mode != "delete" && key === 88) { //x
+	    mode = "delete";
+	    addSelect = "";
+	} else if (mode == "delete" && key === 88) {
+	    mode = "move";
+	    addSelect = "";
+	}
+
+    if (mode != "token" && key === 67) { //c
         mode = "token";
         addSelect = "";
-    } else if (mode == "token" && key === 90) {
+    } else if (mode == "token" && key === 67) {
         mode = "move";
         addSelect = "";
     }
 
-    if (mode != "highlight" && key === 67) { //c
+    if (mode != "highlight" && key === 86) { //v
         mode = "highlight";
         addSelect = "";
-    } else if (mode == "highlight" && key === 67) {
+    } else if (mode == "highlight" && key === 86) {
         mode = "move";
         addSelect = "";
     }
