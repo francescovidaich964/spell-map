@@ -98,50 +98,50 @@ function spellDraw(spell) {
 }
 
 function wrapText(context, text, x, y, maxWidth, lineHeight) {
-	var words = text.split(' ');
-	var line = '';
+    var words = text.split(' ');
+    var line = '';
 
-	for(var n = 0; n < words.length; n++) {
-	  var testLine = line + words[n] + ' ';
-	  var metrics = context.measureText(testLine);
-	  var testWidth = metrics.width;
-	  if (testWidth > maxWidth && n > 0) {
-	    context.fillText(line, x, y);
-	    line = words[n] + ' ';
-	    y += lineHeight;
-	  }
-	  else {
-	    line = testLine;
-	  }
-	}
-	context.fillText(line, x, y);
+    for(var n = 0; n < words.length; n++) {
+      var testLine = line + words[n] + ' ';
+      var metrics = context.measureText(testLine);
+      var testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        context.fillText(line, x, y);
+        line = words[n] + ' ';
+        y += lineHeight;
+      }
+      else {
+        line = testLine;
+      }
+    }
+    context.fillText(line, x, y);
 }
 
 function spellLabel(spell) {
-	if (spell.highlight) ctx.fillStyle = 'blue';
-	else ctx.fillStyle = 'white';
-	
-	ctx.font = "10px Verdana";
-    	ctx.textAlign = "center";
-	wrapText(ctx,spell.name,spell.x,spell.y - 20,50,9);
-	ctx.fillText("Lvl: " + spell.level, spell.x, spell.y + 20);
+    if (spell.highlight) ctx.fillStyle = 'blue';
+    else ctx.fillStyle = 'white';
+    
+    ctx.font = "10px Verdana";
+        ctx.textAlign = "center";
+    wrapText(ctx,spell.name,spell.x,spell.y - 20,50,9);
+    ctx.fillText("Lvl: " + spell.level, spell.x, spell.y + 20);
 }
 
 var spellX = [
-	40, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160,
-  40, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160,
-  40, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160,
-  40, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160,
+    40, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160,
+    40, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160,
+    40, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160,
+    40, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160,
     40, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160,
     40, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160,
     40, 120, 200, 280, 360, 440, 520, 600, 680, 760, 840, 920, 1000, 1080, 1160,
 ];
 
 var spellY = [
-	640, 640, 640, 640, 640, 640, 640, 640, 640, 640, 640, 640, 640, 640, 640,
-  700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700,
-  760, 760, 760, 760, 760, 760, 760, 760, 760, 760, 760, 760, 760, 760, 760,
-  820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 
+    640, 640, 640, 640, 640, 640, 640, 640, 640, 640, 640, 640, 640, 640, 640,
+    700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700, 700,
+    760, 760, 760, 760, 760, 760, 760, 760, 760, 760, 760, 760, 760, 760, 760,
+    820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 820, 
     880, 880, 880, 880, 880, 880, 880, 880, 880, 880, 880, 880, 880, 880, 880,
     940, 940, 940, 940, 940, 940, 940, 940, 940, 940, 940, 940, 940, 940, 940,
     1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000,
@@ -151,462 +151,462 @@ var spells = [];
 
 //Abjuration
 var abjuration = [
-	["Blade Ward",0],
-	["Absorb Elements",1],
-	["Alarm",1],
-	["Mage Armor",1],
-	["Protection from Evil and Good",1],
-	["Shield",1],
-	["Snare",1],
-	["Arcane Lock",2],
-	["Digital Phantom (UA)",2],
-	["Mental Barrier (UA)",2],
-	["Thought Shield (UA)",2],
-	["Counterspell",3],
-	["Dispel Magic",3],
-	["Glyph of Warding",3],
-	["Intellect Fortress",3],
-	["Magic Circle",3],
-	["Nondetection",3],
-	["Protection from Ballistics (UA)",3],
-	["Protection from Energy",3],
-	["Remove Curse",3],
-	["Banishment",4],
-	["Gate Seal",4],
-	["Mordenkainen's Private Sanctum",4],
-	["Stoneskin",4],
-	["Planar Binding",5],
-	["Fizban's Platinum Shield",6],
-	["Globe of Invulnerability",6],
-	["Guards and Wards",6],
-	["Symbol",7],
-	["Antimagic Field",8],
-	["Mind Blank",8],
-	["Imprisonment",9],
-	["Invulnerability",9],
-	["Prismatic Wall",9]
+    ["Blade Ward",0],
+    ["Absorb Elements",1],
+    ["Alarm",1],
+    ["Mage Armor",1],
+    ["Protection from Evil and Good",1],
+    ["Shield",1],
+    ["Snare",1],
+    ["Arcane Lock",2],
+    ["Digital Phantom (UA)",2],
+    ["Mental Barrier (UA)",2],
+    ["Thought Shield (UA)",2],
+    ["Counterspell",3],
+    ["Dispel Magic",3],
+    ["Glyph of Warding",3],
+    ["Intellect Fortress",3],
+    ["Magic Circle",3],
+    ["Nondetection",3],
+    ["Protection from Ballistics (UA)",3],
+    ["Protection from Energy",3],
+    ["Remove Curse",3],
+    ["Banishment",4],
+    ["Gate Seal",4],
+    ["Mordenkainen's Private Sanctum",4],
+    ["Stoneskin",4],
+    ["Planar Binding",5],
+    ["Fizban's Platinum Shield",6],
+    ["Globe of Invulnerability",6],
+    ["Guards and Wards",6],
+    ["Symbol",7],
+    ["Antimagic Field",8],
+    ["Mind Blank",8],
+    ["Imprisonment",9],
+    ["Invulnerability",9],
+    ["Prismatic Wall",9]
 ];
 for(i = 0; i < abjuration.length; i++) {
-	spells[spells.length] = new spell(abjuration[i][0], "Abjuration", abjuration[i][1], spellX[i], spellY[i]);
+    spells[spells.length] = new spell(abjuration[i][0], "Abjuration", abjuration[i][1], spellX[i], spellY[i]);
 }
 //Conjuration
 var conjuration = [
-	["Acid Splash",0],
-	["Create Bonfire",0],
-	["Infestation",0],
-	["Mage Hand",0],
-	["Poison Spray",0],
-	["Sword Burst",0],
-	["Find Familiar",1],
-	["Fog Cloud",1],
-	["Grease",1],
-	["Healing Elixir (UA)",1],
-	["Ice Knife",1],
-	["Tenser's Floating Disk",1],
-	["Unseen Servant",1],
-	["Air Bubble",2],
-	["Cloud of Daggers",2],
-	["Dust Devil",2],
-	["Find Vehicle (UA)",2],
-	["Flaming Sphere",2],
-	["Flock of Familiars",2],
-	["Misty Step",2],
-	["Spray Of Cards",2],
-	["Vortex Warp",2],
-	["Web",2],
-	["Wristpocket",2],
-	["Conjure Lesser Demon (UA)",3],
-	["Galder's Tower",3],
-	["House of Cards (UA)",3],
-	["Sleet Storm",3],
-	["Stinking Cloud",3],
-	["Summon Fey",3],
-	["Summon Lesser Demons",3],
-	["Summon Shadowspawn",3],
-	["Summon Warrior Spirit (UA)",3],
-	["Thunder Step",3],
-	["Tidal Wave",3],
-	["Conjure Barlgura (UA)",4],
-	["Conjure Knowbot (UA)",4],
-	["Conjure Minor Elementals",4],
-	["Conjure Shadow Demon (UA)",4],
-	["Dimension Door",4],
-	["Evard's Black Tentacles",4],
-	["Galder's Speedy Courier",4],
-	["Leomund's Secret Chest",4],
-	["Mordenkainen's Faithful Hound",4],
-	["Summon Aberration",4],
-	["Summon Construct",4],
-	["Summon Elemental",4],
-	["Summon Greater Demon",4],
-	["Watery Sphere",4],
-	["Cloudkill",5],
-	["Conjure Elemental",5],
-	["Conjure Vrock (UA)",5],
-	["Far Step",5],
-	["Infernal Calling",5],
-	["Steel Wind Strike",5],
-	["Summon Draconic Spirit",5],
-	["Summon Draconic Spirit (UA)",5],
-	["Teleportation Circle",5],
-	["Arcane Gate",6],
-	["Drawmij's Instant Summons",6],
-	["Dream of the Blue Veil",6],
-	["Scatter",6],
-	["Summon Fiend",6],
-	["Conjure Hezrou (UA)",7],
-	["Mordenkainen's Magnificent Mansion",7],
-	["Plane Shift",7],
-	["Teleport",7],
-	["Demiplane",8],
-	["Incendiary Cloud",8],
-	["Maze",8],
-	["Mighty Fortress",8],
-	["Reality Break",8],
-	["Blade of Disaster",9],
-	["Gate",9],
-	["Wish",9]
+    ["Acid Splash",0],
+    ["Create Bonfire",0],
+    ["Infestation",0],
+    ["Mage Hand",0],
+    ["Poison Spray",0],
+    ["Sword Burst",0],
+    ["Find Familiar",1],
+    ["Fog Cloud",1],
+    ["Grease",1],
+    ["Healing Elixir (UA)",1],
+    ["Ice Knife",1],
+    ["Tenser's Floating Disk",1],
+    ["Unseen Servant",1],
+    ["Air Bubble",2],
+    ["Cloud of Daggers",2],
+    ["Dust Devil",2],
+    ["Find Vehicle (UA)",2],
+    ["Flaming Sphere",2],
+    ["Flock of Familiars",2],
+    ["Misty Step",2],
+    ["Spray Of Cards",2],
+    ["Vortex Warp",2],
+    ["Web",2],
+    ["Wristpocket",2],
+    ["Conjure Lesser Demon (UA)",3],
+    ["Galder's Tower",3],
+    ["House of Cards (UA)",3],
+    ["Sleet Storm",3],
+    ["Stinking Cloud",3],
+    ["Summon Fey",3],
+    ["Summon Lesser Demons",3],
+    ["Summon Shadowspawn",3],
+    ["Summon Warrior Spirit (UA)",3],
+    ["Thunder Step",3],
+    ["Tidal Wave",3],
+    ["Conjure Barlgura (UA)",4],
+    ["Conjure Knowbot (UA)",4],
+    ["Conjure Minor Elementals",4],
+    ["Conjure Shadow Demon (UA)",4],
+    ["Dimension Door",4],
+    ["Evard's Black Tentacles",4],
+    ["Galder's Speedy Courier",4],
+    ["Leomund's Secret Chest",4],
+    ["Mordenkainen's Faithful Hound",4],
+    ["Summon Aberration",4],
+    ["Summon Construct",4],
+    ["Summon Elemental",4],
+    ["Summon Greater Demon",4],
+    ["Watery Sphere",4],
+    ["Cloudkill",5],
+    ["Conjure Elemental",5],
+    ["Conjure Vrock (UA)",5],
+    ["Far Step",5],
+    ["Infernal Calling",5],
+    ["Steel Wind Strike",5],
+    ["Summon Draconic Spirit",5],
+    ["Summon Draconic Spirit (UA)",5],
+    ["Teleportation Circle",5],
+    ["Arcane Gate",6],
+    ["Drawmij's Instant Summons",6],
+    ["Dream of the Blue Veil",6],
+    ["Scatter",6],
+    ["Summon Fiend",6],
+    ["Conjure Hezrou (UA)",7],
+    ["Mordenkainen's Magnificent Mansion",7],
+    ["Plane Shift",7],
+    ["Teleport",7],
+    ["Demiplane",8],
+    ["Incendiary Cloud",8],
+    ["Maze",8],
+    ["Mighty Fortress",8],
+    ["Reality Break",8],
+    ["Blade of Disaster",9],
+    ["Gate",9],
+    ["Wish",9]
 ];
 for(i = 0; i < conjuration.length; i++) {
-	spells[spells.length] = new spell(conjuration[i][0], "Conjuration", conjuration[i][1], spellX[i], spellY[i]);
+    spells[spells.length] = new spell(conjuration[i][0], "Conjuration", conjuration[i][1], spellX[i], spellY[i]);
 }
 //Divination
 var divination = [
     ["Magecraft",0],
-	["True Strike",0],
-	["Comprehend Languages",1],
-	["Detect Magic",1],
-	["Gift of Alacrity",1],
-	["Guiding Hand (UA)",1],
-	["Identify",1],
-	["Infallible Relay (UA)",1],
-	["Sense Emotion (UA)",1],
-	["Augury",2],
-	["Borrowed Knowledge",2],
-	["Detect Thoughts",2],
-	["Fortune's Favor",2],
-	["Locate Object",2],
-	["Mind Spike",2],
-	["See Invisibility",2],
-	["Warp Sense",2],
-	["Clairvoyance",3],
-	["Tongues",3],
-	["Arcane Eye",4],
-	["Divination",4],
-	["Locate Creature",4],
-	["Commune with City (UA)",5],
-	["Contact Other Plane",5],
-	["Legend Lore",5],
-	["Rary's Telepathic Bond",5],
-	["Scrying",5],
-	["True Seeing",6],
-	["Foresight",9]
+    ["True Strike",0],
+    ["Comprehend Languages",1],
+    ["Detect Magic",1],
+    ["Gift of Alacrity",1],
+    ["Guiding Hand (UA)",1],
+    ["Identify",1],
+    ["Infallible Relay (UA)",1],
+    ["Sense Emotion (UA)",1],
+    ["Augury",2],
+    ["Borrowed Knowledge",2],
+    ["Detect Thoughts",2],
+    ["Fortune's Favor",2],
+    ["Locate Object",2],
+    ["Mind Spike",2],
+    ["See Invisibility",2],
+    ["Warp Sense",2],
+    ["Clairvoyance",3],
+    ["Tongues",3],
+    ["Arcane Eye",4],
+    ["Divination",4],
+    ["Locate Creature",4],
+    ["Commune with City (UA)",5],
+    ["Contact Other Plane",5],
+    ["Legend Lore",5],
+    ["Rary's Telepathic Bond",5],
+    ["Scrying",5],
+    ["True Seeing",6],
+    ["Foresight",9]
 ];
 for(i = 0; i < divination.length; i++) {
-	spells[spells.length] = new spell(divination[i][0], "Divination", divination[i][1], spellX[i], spellY[i]);
+    spells[spells.length] = new spell(divination[i][0], "Divination", divination[i][1], spellX[i], spellY[i]);
 }
 //Enchantment 
 var enchantment = [
-	["Encode Thoughts",0],
-	["Friends",0],
-	["Mind Sliver",0],
-	["Charm Person",1],
-	["Id Insinuation (UA)",1],
-	["Puppet (UA)",1],
-	["Silvery Barbs",1],
-	["Sleep",1],
-	["Sudden Awakening (UA)",1],
-	["Tasha's Hideous Laughter",1],
-	["Crown of Madness",2],
-	["Gift of Gab",2],
-	["Hold Person",2],
-	["Jim's Glowing Coin",2],
-	["Mind Thrust (UA)",2],
-	["Suggestion",2],
-	["Tasha's Mind Whip",2],
-	["Antagonize",3],
-	["Antagonize (UA)",3],
-	["Catnap",3],
-	["Enemies Abound",3],
-	["Fast Friends",3],
-	["Haywire (UA)",3],
-	["Incite Greed",3],
-	["Charm Monster",4],
-	["Confusion",4],
-	["Ego Whip (UA)",4],
-	["Raulothim's Psychic Lance",4],
-	["Raulothim's Psychic Lance (UA)",4],
-	["Synchronicity (UA)",4],
-	["Dominate Person",5],
-	["Geas",5],
-	["Hold Monster",5],
-	["Modify Memory",5],
-	["Synaptic Static",5],
-	["Mass Suggestion",6],
-	["Otto's Irresistible Dance",6],
-	["Psychic Crush (UA)",6],
-	["Power Word Pain",7],
-	["Antipathy/Sympathy",8],
-	["Dominate Monster",8],
-	["Feeblemind",8],
-	["Power Word Stun",8],
-	["Power Word Kill",9],
-	["Psychic Scream",9]
+    ["Encode Thoughts",0],
+    ["Friends",0],
+    ["Mind Sliver",0],
+    ["Charm Person",1],
+    ["Id Insinuation (UA)",1],
+    ["Puppet (UA)",1],
+    ["Silvery Barbs",1],
+    ["Sleep",1],
+    ["Sudden Awakening (UA)",1],
+    ["Tasha's Hideous Laughter",1],
+    ["Crown of Madness",2],
+    ["Gift of Gab",2],
+    ["Hold Person",2],
+    ["Jim's Glowing Coin",2],
+    ["Mind Thrust (UA)",2],
+    ["Suggestion",2],
+    ["Tasha's Mind Whip",2],
+    ["Antagonize",3],
+    ["Antagonize (UA)",3],
+    ["Catnap",3],
+    ["Enemies Abound",3],
+    ["Fast Friends",3],
+    ["Haywire (UA)",3],
+    ["Incite Greed",3],
+    ["Charm Monster",4],
+    ["Confusion",4],
+    ["Ego Whip (UA)",4],
+    ["Raulothim's Psychic Lance",4],
+    ["Raulothim's Psychic Lance (UA)",4],
+    ["Synchronicity (UA)",4],
+    ["Dominate Person",5],
+    ["Geas",5],
+    ["Hold Monster",5],
+    ["Modify Memory",5],
+    ["Synaptic Static",5],
+    ["Mass Suggestion",6],
+    ["Otto's Irresistible Dance",6],
+    ["Psychic Crush (UA)",6],
+    ["Power Word Pain",7],
+    ["Antipathy/Sympathy",8],
+    ["Dominate Monster",8],
+    ["Feeblemind",8],
+    ["Power Word Stun",8],
+    ["Power Word Kill",9],
+    ["Psychic Scream",9]
 ];
 for(i = 0; i < enchantment.length; i++) {
-	spells[spells.length] = new spell(enchantment[i][0], "Enchantment", enchantment[i][1], spellX[i], spellY[i]);
+    spells[spells.length] = new spell(enchantment[i][0], "Enchantment", enchantment[i][1], spellX[i], spellY[i]);
 }
 //Evocation
 var evocation = [
-	["Booming Blade",0],
-	["Dancing Lights",0],
-	["Fire Bolt",0],
-	["Force Blast",0],
-	["Frostbite",0],
-	["Green-Flame Blade",0],
-	["Light",0],
-	["Lightning Lure",0],
-	["Ray of Frost",0],
-	["Shocking Grasp",0],
-	["Thunderclap",0],
-	["Acid Stream (UA)",1],
-	["Burning Hands",1],
-	["Chromatic Orb",1],
-	["Concussive Burst",1],
-	["Earth Tremor",1],
-	["Frost Fingers",1],
-	["Jim's Magic Missile",1],
-	["Magic Missile",1],
-	["Tasha's Caustic Brew",1],
-	["Thunderwave",1],
-	["Witch Bolt",1],
-	["Aganazzar's Scorcher",2],
-	["Continual Flame",2],
-	["Darkness",2],
-	["Gust of Wind",2],
-	["Icingdeath's Frost (UA)",2],
-	["Melf's Acid Arrow",2],
-	["Rime's Binding Ice",2],
-	["Scorching Ray",2],
-	["Shatter",2],
-	["Snilloc's Snowball Swarm",2],
-	["Warding Wind",2],
-	["Fireball",3],
-	["Leomund's Tiny Hut",3],
-	["Lightning Bolt",3],
-	["Melf's Minute Meteors",3],
-	["Psionic Blast (UA)",3],
-	["Pulse Wave",3],
-	["Sending",3],
-	["Wall of Sand",3],
-	["Wall of Water",3],
-	["Fire Shield",4],
-	["Gravity Sinkhole",4],
-	["Ice Storm",4],
-	["Otiluke's Resilient Sphere",4],
-	["Sickening Radiance",4],
-	["Storm Sphere",4],
-	["Vitriolic Sphere",4],
-	["Wall of Fire",4],
-	["Bigby's Hand",5],
-	["Cone of Cold",5],
-	["Dawn",5],
-	["Immolation",5],
-	["Wall of Force",5],
-	["Wall of Light",5],
-	["Wall of Stone",5],
-	["Chain Lightning",6],
-	["Contingency",6],
-	["Gravity Fissure",6],
-	["Otiluke's Freezing Sphere",6],
-	["Sunbeam",6],
-	["Wall of Ice",6],
-	["Crown of Stars",7],
-	["Delayed Blast Fireball",7],
-	["Forcecage",7],
-	["Mordenkainen's Sword",7],
-	["Prismatic Spray",7],
-	["Whirlwind",7],
-	["Dark Star",8],
-	["Maddening Darkness",8],
-	["Sunburst",8],
-	["Telepathy",8],
-	["Astral Projection",9],
-	["Meteor Swarm",9],
-	["Ravenous Void",9]
+    ["Booming Blade",0],
+    ["Dancing Lights",0],
+    ["Fire Bolt",0],
+    ["Force Blast",0],
+    ["Frostbite",0],
+    ["Green-Flame Blade",0],
+    ["Light",0],
+    ["Lightning Lure",0],
+    ["Ray of Frost",0],
+    ["Shocking Grasp",0],
+    ["Thunderclap",0],
+    ["Acid Stream (UA)",1],
+    ["Burning Hands",1],
+    ["Chromatic Orb",1],
+    ["Concussive Burst",1],
+    ["Earth Tremor",1],
+    ["Frost Fingers",1],
+    ["Jim's Magic Missile",1],
+    ["Magic Missile",1],
+    ["Tasha's Caustic Brew",1],
+    ["Thunderwave",1],
+    ["Witch Bolt",1],
+    ["Aganazzar's Scorcher",2],
+    ["Continual Flame",2],
+    ["Darkness",2],
+    ["Gust of Wind",2],
+    ["Icingdeath's Frost (UA)",2],
+    ["Melf's Acid Arrow",2],
+    ["Rime's Binding Ice",2],
+    ["Scorching Ray",2],
+    ["Shatter",2],
+    ["Snilloc's Snowball Swarm",2],
+    ["Warding Wind",2],
+    ["Fireball",3],
+    ["Leomund's Tiny Hut",3],
+    ["Lightning Bolt",3],
+    ["Melf's Minute Meteors",3],
+    ["Psionic Blast (UA)",3],
+    ["Pulse Wave",3],
+    ["Sending",3],
+    ["Wall of Sand",3],
+    ["Wall of Water",3],
+    ["Fire Shield",4],
+    ["Gravity Sinkhole",4],
+    ["Ice Storm",4],
+    ["Otiluke's Resilient Sphere",4],
+    ["Sickening Radiance",4],
+    ["Storm Sphere",4],
+    ["Vitriolic Sphere",4],
+    ["Wall of Fire",4],
+    ["Bigby's Hand",5],
+    ["Cone of Cold",5],
+    ["Dawn",5],
+    ["Immolation",5],
+    ["Wall of Force",5],
+    ["Wall of Light",5],
+    ["Wall of Stone",5],
+    ["Chain Lightning",6],
+    ["Contingency",6],
+    ["Gravity Fissure",6],
+    ["Otiluke's Freezing Sphere",6],
+    ["Sunbeam",6],
+    ["Wall of Ice",6],
+    ["Crown of Stars",7],
+    ["Delayed Blast Fireball",7],
+    ["Forcecage",7],
+    ["Mordenkainen's Sword",7],
+    ["Prismatic Spray",7],
+    ["Whirlwind",7],
+    ["Dark Star",8],
+    ["Maddening Darkness",8],
+    ["Sunburst",8],
+    ["Telepathy",8],
+    ["Astral Projection",9],
+    ["Meteor Swarm",9],
+    ["Ravenous Void",9]
 ];
 
 for(i = 0; i < evocation.length; i++) {
-	spells[spells.length] = new spell(evocation[i][0], "Evocation", evocation[i][1], spellX[i], spellY[i]);
+    spells[spells.length] = new spell(evocation[i][0], "Evocation", evocation[i][1], spellX[i], spellY[i]);
 }
 
 //Illusion
 var illusion = [
-	["Aundairs Silent Sanctum",0],
-	["Minor Illusion",0],
-	["Color Spray",1],
-	["Disguise Self",1],
-	["Distort Value",1],
-	["Illusory Script",1],
-	["Silent Image",1],
-	["Blur",2],
-	["Invisibility",2],
-	["Magic Mouth",2],
-	["Mirror Image",2],
-	["Nathair's Mischief",2],
-	["Nystul's Magic Aura",2],
-	["Phantasmal Force",2],
-	["Shadow Blade",2],
-	["Fear",3],
-	["Hypnotic Pattern",3],
-	["Invisibility To Cameras (UA)",3],
-	["Major Image",3],
-	["Phantom Steed",3],
-	["Greater Invisibility",4],
-	["Hallucinatory Terrain",4],
-	["Phantasmal Killer",4],
-	["Creation",5],
-	["Dream",5],
-	["Mislead",5],
-	["Seeming",5],
-	["Mental Prison",6],
-	["Programmed Illusion",6],
-	["Mirage Arcane",7],
-	["Project Image",7],
-	["Simulacrum",7],
-	["Illusory Dragon",8],
-	["Weird",9]
+    ["Aundairs Silent Sanctum",0],
+    ["Minor Illusion",0],
+    ["Color Spray",1],
+    ["Disguise Self",1],
+    ["Distort Value",1],
+    ["Illusory Script",1],
+    ["Silent Image",1],
+    ["Blur",2],
+    ["Invisibility",2],
+    ["Magic Mouth",2],
+    ["Mirror Image",2],
+    ["Nathair's Mischief",2],
+    ["Nystul's Magic Aura",2],
+    ["Phantasmal Force",2],
+    ["Shadow Blade",2],
+    ["Fear",3],
+    ["Hypnotic Pattern",3],
+    ["Invisibility To Cameras (UA)",3],
+    ["Major Image",3],
+    ["Phantom Steed",3],
+    ["Greater Invisibility",4],
+    ["Hallucinatory Terrain",4],
+    ["Phantasmal Killer",4],
+    ["Creation",5],
+    ["Dream",5],
+    ["Mislead",5],
+    ["Seeming",5],
+    ["Mental Prison",6],
+    ["Programmed Illusion",6],
+    ["Mirage Arcane",7],
+    ["Project Image",7],
+    ["Simulacrum",7],
+    ["Illusory Dragon",8],
+    ["Weird",9]
 ];
 for(i = 0; i < illusion.length; i++) {
-	spells[spells.length] = new spell(illusion[i][0], "Illusion", illusion[i][1], spellX[i], spellY[i]);
+    spells[spells.length] = new spell(illusion[i][0], "Illusion", illusion[i][1], spellX[i], spellY[i]);
 }
 
 //Necromancy
 var necromancy = [
-	["Chill Touch",0],
-	["Sapping Sting",0],
-	["Toll the Dead",0],
-	["Cause Fear",1],
-	["False Life",1],
-	["Ray of Sickness",1],
-	["Blindness/Deafness",2],
-	["Gentle Repose",2],
-	["Ray of Enfeeblement",2],
-	["Wither and Bloom",2],
-	["Animate Dead",3],
-	["Bestow Curse",3],
-	["Feign Death",3],
-	["Life Transference",3],
-	["Speak with Dead",3],
-	["Spirit Shroud",3],
-	["Summon Undead",3],
-	["Vampiric Touch",3],
-	["Blight",4],
-	["Spirit Of Death",4],
-	["Spirit of Death (UA)",4],
-	["Danse Macabre",5],
-	["Enervation",5],
-	["Negative Energy Flood",5],
-	["Circle of Death",6],
-	["Create Undead",6],
-	["Eyebite",6],
-	["Magic Jar",6],
-	["Soul Cage",6],
-	["Finger of Death",7],
-	["Tether Essence",7],
-	["Abi-Dalzim's Horrid Wilting",8],
-	["Clone",8],
-	["Astral Projection",9],
-	["Time Ravage",9]
+    ["Chill Touch",0],
+    ["Sapping Sting",0],
+    ["Toll the Dead",0],
+    ["Cause Fear",1],
+    ["False Life",1],
+    ["Ray of Sickness",1],
+    ["Blindness/Deafness",2],
+    ["Gentle Repose",2],
+    ["Ray of Enfeeblement",2],
+    ["Wither and Bloom",2],
+    ["Animate Dead",3],
+    ["Bestow Curse",3],
+    ["Feign Death",3],
+    ["Life Transference",3],
+    ["Speak with Dead",3],
+    ["Spirit Shroud",3],
+    ["Summon Undead",3],
+    ["Vampiric Touch",3],
+    ["Blight",4],
+    ["Spirit Of Death",4],
+    ["Spirit of Death (UA)",4],
+    ["Danse Macabre",5],
+    ["Enervation",5],
+    ["Negative Energy Flood",5],
+    ["Circle of Death",6],
+    ["Create Undead",6],
+    ["Eyebite",6],
+    ["Magic Jar",6],
+    ["Soul Cage",6],
+    ["Finger of Death",7],
+    ["Tether Essence",7],
+    ["Abi-Dalzim's Horrid Wilting",8],
+    ["Clone",8],
+    ["Astral Projection",9],
+    ["Time Ravage",9]
 ];
 for(i = 0; i < necromancy.length; i++) {
-	spells[spells.length] = new spell(necromancy[i][0], "Necromancy", necromancy[i][1], spellX[i], spellY[i]);
+    spells[spells.length] = new spell(necromancy[i][0], "Necromancy", necromancy[i][1], spellX[i], spellY[i]);
 }
 //Transmutation
 var transmutation = [
-	["Control Flames",0],
-	["Gust",0],
-	["Mending",0],
-	["Message",0],
-	["Mold Earth",0],
-	["Prestidigitation",0],
-	["Shape Water",0],
-	["Catapult",1],
-	["Expeditious Retreat",1],
-	["Feather Fall",1],
-	["Jump",1],
-	["Longstrider",1],
-	["Magnify Gravity",1],
-	["Remote Access (UA)",1],
-	["Alter Self",2],
-	["Arcane Hacking (UA)",2],
-	["Ashardalons Stride",2],
-	["Darkvision",2],
-	["Dragon's Breath",2],
-	["Earthbind",2],
-	["Enhance Ability",2],
-	["Enlarge/Reduce",2],
-	["Immovable Object",2],
-	["Kinetic Jaunt",2],
-	["Knock",2],
-	["Levitate",2],
-	["Magic Weapon",2],
-	["Maximilians Earthen Grasp",2],
-	["Maximillian's Earthen Grasp",2],
-	["Pyrotechnics",2],
-	["Rope Trick",2],
-	["Skywrite",2],
-	["Spider Climb",2],
-	["Blink",3],
-	["Erupting Earth",3],
-	["Flame Arrows",3],
-	["Flame Stride (UA)",3],
-	["Fly",3],
-	["Gaseous Form",3],
-	["Haste",3],
-	["Slow",3],
-	["Tiny Servant",3],
-	["Water Breathing",3],
-	["Control Water",4],
-	["Elemental Bane",4],
-	["Fabricate",4],
-	["Polymorph",4],
-	["Stone Shape",4],
-	["System Backdoor (UA)",4],
-	["Animate Objects",5],
-	["Control Winds",5],
-	["Create Spelljamming Helm",5],
-	["Passwall",5],
-	["Shutdown (UA)",5],
-	["Skill Empowerment",5],
-	["Telekinesis",5],
-	["Temporal Shunt",5],
-	["Transmute Rock",5],
-	["Create Homunculus",6],
-	["Disintegrate",6],
-	["Flesh to Stone",6],
-	["Investiture of Flame",6],
-	["Investiture of Ice",6],
-	["Investiture of Stone",6],
-	["Investiture of Wind",6],
-	["Move Earth",6],
-	["Otherworldly Form (UA)",6],
-	["Tasha's Otherworldly Guise",6],
-	["Tenser's Transformation",6],
-	["Create Magen",7],
-	["Draconic Transformation",7],
-	["Draconic Transformation (UA)",7],
-	["Etherealness",7],
-	["Reverse Gravity",7],
-	["Sequester",7],
-	["Control Weather",8],
-	["Mass Polymorph",9],
-	["Shapechange",9],
-	["Time Stop",9],
-	["True Polymorph",9]
+    ["Control Flames",0],
+    ["Gust",0],
+    ["Mending",0],
+    ["Message",0],
+    ["Mold Earth",0],
+    ["Prestidigitation",0],
+    ["Shape Water",0],
+    ["Catapult",1],
+    ["Expeditious Retreat",1],
+    ["Feather Fall",1],
+    ["Jump",1],
+    ["Longstrider",1],
+    ["Magnify Gravity",1],
+    ["Remote Access (UA)",1],
+    ["Alter Self",2],
+    ["Arcane Hacking (UA)",2],
+    ["Ashardalons Stride",2],
+    ["Darkvision",2],
+    ["Dragon's Breath",2],
+    ["Earthbind",2],
+    ["Enhance Ability",2],
+    ["Enlarge/Reduce",2],
+    ["Immovable Object",2],
+    ["Kinetic Jaunt",2],
+    ["Knock",2],
+    ["Levitate",2],
+    ["Magic Weapon",2],
+    ["Maximilians Earthen Grasp",2],
+    ["Maximillian's Earthen Grasp",2],
+    ["Pyrotechnics",2],
+    ["Rope Trick",2],
+    ["Skywrite",2],
+    ["Spider Climb",2],
+    ["Blink",3],
+    ["Erupting Earth",3],
+    ["Flame Arrows",3],
+    ["Flame Stride (UA)",3],
+    ["Fly",3],
+    ["Gaseous Form",3],
+    ["Haste",3],
+    ["Slow",3],
+    ["Tiny Servant",3],
+    ["Water Breathing",3],
+    ["Control Water",4],
+    ["Elemental Bane",4],
+    ["Fabricate",4],
+    ["Polymorph",4],
+    ["Stone Shape",4],
+    ["System Backdoor (UA)",4],
+    ["Animate Objects",5],
+    ["Control Winds",5],
+    ["Create Spelljamming Helm",5],
+    ["Passwall",5],
+    ["Shutdown (UA)",5],
+    ["Skill Empowerment",5],
+    ["Telekinesis",5],
+    ["Temporal Shunt",5],
+    ["Transmute Rock",5],
+    ["Create Homunculus",6],
+    ["Disintegrate",6],
+    ["Flesh to Stone",6],
+    ["Investiture of Flame",6],
+    ["Investiture of Ice",6],
+    ["Investiture of Stone",6],
+    ["Investiture of Wind",6],
+    ["Move Earth",6],
+    ["Otherworldly Form (UA)",6],
+    ["Tasha's Otherworldly Guise",6],
+    ["Tenser's Transformation",6],
+    ["Create Magen",7],
+    ["Draconic Transformation",7],
+    ["Draconic Transformation (UA)",7],
+    ["Etherealness",7],
+    ["Reverse Gravity",7],
+    ["Sequester",7],
+    ["Control Weather",8],
+    ["Mass Polymorph",9],
+    ["Shapechange",9],
+    ["Time Stop",9],
+    ["True Polymorph",9]
 ];
 for(i = 0; i < transmutation.length; i++) {
-	spells[spells.length] = new spell(transmutation[i][0], "Transmutation", transmutation[i][1], spellX[i], spellY[i]);
+    spells[spells.length] = new spell(transmutation[i][0], "Transmutation", transmutation[i][1], spellX[i], spellY[i]);
 }
 
 
@@ -649,19 +649,19 @@ function draw() {
     //ctx.fillStyle = "#888";
     //ctx.fillRect(0, 900, 900, 300);
     
-	ctx.fillStyle = "#333";
+    ctx.fillStyle = "#333";
     for (i = 0; i < 9; i++) {
-    	ctx.beginPath();
-    	if (i % 2 == 0) {
-			for (j = 0; j < 15; j++) { 
-				ctx.arc(j * 80 + 40, i * 70 + 35, 2, 0, 2 * Math.PI, false);
-			}
-    	} else {
-			for (j = 0; j < 14; j++) { 
-    			ctx.arc(j * 80 + 80, i * 70 + 35, 2, 0, 2 * Math.PI, false);
-    		}
-    	}
-    	ctx.fill();
+        ctx.beginPath();
+        if (i % 2 == 0) {
+            for (j = 0; j < 15; j++) { 
+                ctx.arc(j * 80 + 40, i * 70 + 35, 2, 0, 2 * Math.PI, false);
+            }
+        } else {
+            for (j = 0; j < 14; j++) { 
+                ctx.arc(j * 80 + 80, i * 70 + 35, 2, 0, 2 * Math.PI, false);
+            }
+        }
+        ctx.fill();
     }
 
     //ctx.globalAlpha = 0.1;
@@ -694,7 +694,7 @@ function draw() {
             else cantripCount++;
             if (spells[i].token) tokenCount++;
             for (j = 0; j < spells.length; j++) {
-                if (spells[j].y < 600 && ((spells[i].level == spells[j].level && spells[i].whitelist.indexOf(spells[j].name) >= 0) || (spells[i].school == spells[j].school && Math.abs(spells[i].level - spells[j].level) == 1))) {
+                if (spells[j].y < 600 && spells[i].whitelist.indexOf(spells[j].name) >= 0) {
                     ctx.beginPath();
                     ctx.moveTo(spells[i].x, spells[i].y);
                     ctx.lineTo(spells[j].x, spells[j].y);
@@ -728,11 +728,11 @@ function draw() {
     }
 
     for (i = 0; i < spells.length; i++) {
-    	if (spells[i].y < 600 && !spells[i].held) {
-			spells[i].y = Math.round((spells[i].y - 17) / 70) * 70 + 35;
-			if (Math.round((spells[i].y - 17) / 70) % 2 == 0) spells[i].x = Math.round((spells[i].x - 40) / 80) * 80 + 40;
-			else spells[i].x = Math.round((spells[i].x - 20) / 80) * 80;
-    	}
+        if (spells[i].y < 600 && !spells[i].held) {
+            spells[i].y = Math.round((spells[i].y - 17) / 70) * 70 + 35;
+            if (Math.round((spells[i].y - 17) / 70) % 2 == 0) spells[i].x = Math.round((spells[i].x - 40) / 80) * 80 + 40;
+            else spells[i].x = Math.round((spells[i].x - 20) / 80) * 80;
+        }
         if (spells[i].y < 600 || spells[i].school == menuSchool || spells[i].held || spells[i].highlight) spellDraw(spells[i]);
     }
 
@@ -835,18 +835,18 @@ function draw() {
         ctx.lineWidth = 1;
         ctx.strokeStyle = "black";
     } else if (mode == "delete") {
-	    ctx.strokeStyle = "red";
-	    ctx.lineWidth = 3;
-	    ctx.beginPath();
-	    ctx.moveTo(mouseX - 7, mouseY - 7);
-	    ctx.lineTo(mouseX + 7, mouseY + 7);
-	    ctx.stroke();
-	    ctx.beginPath();
-	    ctx.moveTo(mouseX + 7, mouseY - 7);
-	    ctx.lineTo(mouseX - 7, mouseY + 7);
-	    ctx.stroke();
-	    ctx.lineWidth = 1;
-	    ctx.strokeStyle = "black";
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(mouseX - 7, mouseY - 7);
+        ctx.lineTo(mouseX + 7, mouseY + 7);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(mouseX + 7, mouseY - 7);
+        ctx.lineTo(mouseX - 7, mouseY + 7);
+        ctx.stroke();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "black";
     } else {
         ctx.fillStyle = "orange";
         ctx.beginPath();
@@ -937,7 +937,17 @@ document.onmousedown = function(e) {
                     if (spells[i].whitelist.indexOf(addSelect) < 0) {
                         for (j = spells.length - 1; j >= 0; j--) {
                             if (spells[j].name == addSelect) {
-                                if (spells[i].level == spells[j].level && spells[i].whitelist.length < 2 && spells[j].whitelist.length < 2) {
+                                // Check if linking is allowed based on your rules
+                                var canLink = false;
+                                if (spells[i].level == spells[j].level) {
+                                    // Same level spells can always be linked (any school)
+                                    canLink = true;
+                                } else if (spells[i].school == spells[j].school && Math.abs(spells[i].level - spells[j].level) == 1) {
+                                    // Consecutive level spells can be linked only if same school
+                                    canLink = true;
+                                }
+
+                                if (canLink) {
                                     spells[j].whitelist[spells[j].whitelist.length] = spells[i].name;
                                     spells[i].whitelist[spells[i].whitelist.length] = addSelect;
                                     addSelect = spells[i].name;
@@ -948,7 +958,7 @@ document.onmousedown = function(e) {
                             }
                         }
                     } else {
-                        spells[i].whitelist.splice(spells[i].whitelist.indexOf(addSelect, 1));
+                        spells[i].whitelist.splice(spells[i].whitelist.indexOf(addSelect), 1);
                         for (j = spells.length - 1; j >= 0; j--) {
                             if (spells[j].name == addSelect) {
                                 spells[j].whitelist.splice(spells[j].whitelist.indexOf(spells[i].name), 1);
@@ -959,14 +969,14 @@ document.onmousedown = function(e) {
                     }
                 }
             } else if (mode == "delete" && spells[i].y < 600) {
-			    // Delete all connections for this spell
-			    for (j = 0; j < spells.length; j++) {
-			        var index = spells[j].whitelist.indexOf(spells[i].name);
-			        if (index >= 0) {
-			            spells[j].whitelist.splice(index, 1);
-			        }
-			    }
-			    spells[i].whitelist = [];
+                // Delete all connections for this spell
+                for (j = 0; j < spells.length; j++) {
+                    var index = spells[j].whitelist.indexOf(spells[i].name);
+                    if (index >= 0) {
+                        spells[j].whitelist.splice(index, 1);
+                    }
+                }
+                spells[i].whitelist = [];
             } else if (mode == "token" && spells[i].y < 600) {
                 spells[i].token = !spells[i].token;
             }
@@ -1061,12 +1071,12 @@ document.onkeydown = function(e) {
     }
 
     if (mode != "delete" && key === 88) { //x
-	    mode = "delete";
-	    addSelect = "";
-	} else if (mode == "delete" && key === 88) {
-	    mode = "move";
-	    addSelect = "";
-	}
+        mode = "delete";
+        addSelect = "";
+    } else if (mode == "delete" && key === 88) {
+        mode = "move";
+        addSelect = "";
+    }
 
     if (mode != "token" && key === 67) { //c
         mode = "token";
