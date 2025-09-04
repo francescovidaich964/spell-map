@@ -1,4 +1,3 @@
-
 function spell(name, school, level, x, y) {
     this.name = name;
     this.school = school;
@@ -496,5 +495,3 @@ var transmutation = [
 for(i = 0; i < transmutation.length; i++) {
     spells[spells.length] = new spell(transmutation[i][0], "Transmutation", transmutation[i][1], spellX[i], spellY[i]);
 }
-
-export { spells };
