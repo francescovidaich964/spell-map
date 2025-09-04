@@ -2,6 +2,60 @@
     <head>
         <title>Spell Map V0.5</title>
         <link rel="stylesheet" href="SpellStyle.css">
+        <style>
+        
+        #spellFilterPanel {
+            width: 100%;
+            max-width: 1200px;
+            background: #333;
+            border: 2px solid #666;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            box-sizing: border-box;
+        }
+        
+        #spellFilterInput {
+            width: 100%;
+            height: 100px;
+            background: #222;
+            color: white;
+            border: 1px solid #555;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        
+        #filterButton, #resetButton {
+            margin-top: 10px;
+            margin-right: 10px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        #filterButton {
+            background: #007bff;
+            color: white;
+        }
+        
+        #filterButton:hover {
+            background: #0056b3;
+        }
+        
+        #resetButton {
+            background: #6c757d;
+            color: white;
+        }
+        
+        #resetButton:hover {
+            background: #545b62;
+        }
+        </style>
     </head>
     <body>
         <h1 style="text-shadow: 10px 5px 5px #000;">School of Geometry - Deepak Pathak Spell Map</h1>
@@ -26,9 +80,23 @@
             <p><b>Token:</b> Add or remove a token from a spell node. Cursor will be hexagon in this mode</p>
             <p><b>Highlight:</b> Drag to highlight multiple spells (blue text), which can be moved together in "move" mode. Cursor will be four blue arrows in this mode</p>
         </div>
+
         <canvas id="SpellMap" width="1200" height="980" style="border:5px solid #000;"></canvas>
+        
+        <!-- Spell Filter Panel -->
+        <div id="spellFilterPanel">
+            <h4 style="margin-top: 0; color: white;">Filter Spells</h4>
+            <textarea id="spellFilterInput" 
+                    placeholder="Enter spell names (one per line)&#10;Example:&#10;Fireball&#10;Magic Missile&#10;Shield"
+                    spellcheck="false"></textarea>
+            <br>
+            <button id="filterButton">Apply Filter</button>
+            <button id="resetButton">Reset All</button>
+        </div>
+
         <script src="SpellData.js"></script>
         <script src="SpellMap.js"></script>
+
         <h5>&copy; 2018, Calvin McHenry</h5>
         <h5>&copy; 2025, Francesco Vidaich</h5>
     </body>

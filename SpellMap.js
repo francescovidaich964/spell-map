@@ -6,6 +6,160 @@ console.clear();
 
 var mouseX, mouseY;
 
+// Spell filtering variables
+var allSpells = []; // Store original spells
+var filteredSpells = []; // Store filtered spells
+var isFiltered = false;
+var isTextInputFocused = false;
+
+// Initialize allSpells with a copy of the original spells array
+function initializeSpells() {
+    allSpells = spells.map(spell => ({
+        name: spell.name,
+        school: spell.school,
+        level: spell.level,
+        x: spell.homeX,
+        homeX: spell.homeX,
+        y: spell.homeY,
+        homeY: spell.homeY,
+        r: spell.r,
+        held: false,
+        whitelist: [...spell.whitelist],
+        token: false,
+        highlight: false
+    }));
+}
+
+// Function to filter spells based on provided list
+function filterSpells(spellNames) {
+    // Convert input to array and clean it
+    const spellList = spellNames
+        .split('\n')
+        .map(name => name.trim())
+        .filter(name => name.length > 0);
+    
+    if (spellList.length === 0) {
+        resetSpells();
+        return;
+    }
+    
+    // Create filtered array
+    filteredSpells = [];
+    const foundSpells = [];
+    
+    // Find spells that match the input list
+    spellList.forEach(inputName => {
+        const foundSpell = allSpells.find(spell => 
+            spell.name.toLowerCase() === inputName.toLowerCase()
+        );
+        if (foundSpell) {
+            foundSpells.push(foundSpell);
+        }
+    });
+    
+    if (foundSpells.length === 0) {
+        alert("No matching spells found!");
+        return;
+    }
+    
+    // Group by school and recalculate positions
+    const spellsBySchool = {};
+    foundSpells.forEach(spell => {
+        if (!spellsBySchool[spell.school]) {
+            spellsBySchool[spell.school] = [];
+        }
+        spellsBySchool[spell.school].push(spell);
+    });
+    
+    // Reassign positions
+    let currentIndex = 0;
+    Object.keys(spellsBySchool).forEach(school => {
+        spellsBySchool[school].forEach(spell => {
+            const newSpell = {
+                name: spell.name,
+                school: spell.school,
+                level: spell.level,
+                x: spellX[currentIndex],
+                homeX: spellX[currentIndex],
+                y: spellY[currentIndex],
+                homeY: spellY[currentIndex],
+                r: 10,
+                held: false,
+                whitelist: [],
+                token: false,
+                highlight: false
+            };
+            filteredSpells.push(newSpell);
+            currentIndex++;
+        });
+    });
+    
+    // Replace the global spells array
+    spells = filteredSpells;
+    isFiltered = true;
+    
+    console.log(`Filtered to ${spells.length} spells`);
+}
+
+// Function to reset to all spells
+function resetSpells() {
+    spells = allSpells.map(spell => ({
+        name: spell.name,
+        school: spell.school,
+        level: spell.level,
+        x: spell.homeX,
+        homeX: spell.homeX,
+        y: spell.homeY,
+        homeY: spell.homeY,
+        r: spell.r,
+        held: false,
+        whitelist: [...spell.whitelist],
+        token: false,
+        highlight: false
+    }));
+    isFiltered = false;
+    console.log("Reset to all spells");
+}
+
+
+// Update your DOMContentLoaded event listener
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSpells();
+    
+    const textInput = document.getElementById('spellFilterInput');
+    
+    // Focus event - disable spell map controls
+    textInput.addEventListener('focus', function() {
+        isTextInputFocused = true;
+        console.log("Text input focused - spell map controls disabled");
+    });
+    
+    // Blur event - re-enable spell map controls
+    textInput.addEventListener('blur', function() {
+        isTextInputFocused = false;
+        console.log("Text input unfocused - spell map controls enabled");
+    });
+    
+    document.getElementById('filterButton').addEventListener('click', function() {
+        const input = document.getElementById('spellFilterInput').value;
+        filterSpells(input);
+    });
+    
+    document.getElementById('resetButton').addEventListener('click', function() {
+        resetSpells();
+        document.getElementById('spellFilterInput').value = '';
+    });
+    
+    // Allow Enter key to apply filter (Ctrl+Enter for new line)
+    document.getElementById('spellFilterInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.ctrlKey) {
+            e.preventDefault();
+            document.getElementById('filterButton').click();
+        }
+    });
+});
+
+
 var createCookie = function(name, value, days) {
     var expires;
     if (days) {
@@ -565,8 +719,15 @@ document.onmouseup = function(e) {
 document.onkeydown = function(e) {
     e = window.event || e;
     var key = e.keyCode;
-    e.preventDefault();
-
+    
+    // Don't process spell map controls if text input is focused
+    if (isTextInputFocused) {
+        return; // Allow normal text input behavior - DON'T call preventDefault
+    }
+    
+    // Only prevent default if we're handling spell map controls
+    e.preventDefault(); 
+    
     if (mode != "add" && key === 90) { //z
         mode = "add";
     } else if (mode == "add" && key === 90) {
@@ -605,9 +766,9 @@ document.onkeydown = function(e) {
                 usedSpells[usedSpells.length] = spells[i];
             }
         }
-        createCookie(window.prompt("What would you like to save this arangement as (must use exact name to load)?"), JSON.stringify(usedSpells), false);
+        createCookie(window.prompt("What would you like to save this arrangement as (must use exact name to load)?"), JSON.stringify(usedSpells), false);
     } else if (key === 79) { //o
-        usedSpells = JSON.parse(getCookie(window.prompt("What arrangment would you like to load (must use exact name to load)?")));
+        usedSpells = JSON.parse(getCookie(window.prompt("What arrangement would you like to load (must use exact name to load)?")));
         for (i = 0; i < spells.length; i++) {
             var isUsed = false;
             for (j = 0; j < usedSpells.length; j++) {
