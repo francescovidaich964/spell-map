@@ -570,7 +570,7 @@ document.onmousedown = function(e) {
     e = window.event || e;
     var onSpell = false;
     for (i = spells.length - 1; i >= 0; i--) {
-        if (Math.pow(Math.pow(mouseX - spells[i].x, 2) + Math.pow(mouseY - spells[i].y, 2), 0.5) < spells[i].r && (spells[i].y < 500 || spells[i].school == menuSchool)) {
+        if (Math.pow(Math.pow(mouseX - spells[i].x, 2) + Math.pow(mouseY - spells[i].y, 2), 0.5) < spells[i].r && (spells[i].y < 600 || spells[i].school == menuSchool)) {
             onSpell = true;
             if (mode == "move") {
                 if (spells[i].highlight) {
