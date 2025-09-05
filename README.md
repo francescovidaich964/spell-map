@@ -1,37 +1,59 @@
-## Welcome to GitHub Pages
+# D&D School of Geometry Spell Graph Builder
 
-You can use the [editor on GitHub](https://github.com/artem-mateush/spell-map/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+This project provides a web-based visual tool for creating and managing spell graphs, designed for the custom D&D 5e subclass of Deepak (Avalis DnD Campaign) and inspired by [School of Geometry](https://homebrewery.naturalcrit.com/share/SkwZBBxO-).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Project Purpose
 
-### Markdown
+- Visual interactive spell graph based on the daily randomized spell list.
+- Node-based representation and manipulation as per subclass rules.
+- Specialized controls for adding, deleting, moving, highlighting, and tagging spells.
+- Save/load spell arrangements and filter spells for usability.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site. The last updated version can be found here: https://francescovidaich964.github.io/spell-map/
 
-```markdown
-Syntax highlighted code block
+---
 
-# Header 1
-## Header 2
-### Header 3
+## Deepak – School of Geometry Subclass Rules
 
-- Bulleted
-- List
+Deepak has spell slots as per the wizard class table.
 
-1. Numbered
-2. List
+---
 
-**Bold** and _Italic_ and `Code` text
+### ARCANE GRAPH
 
-[Link](url) and ![Image](src)
-```
+At the end of each long rest, Deepak receives a new, random spell list. At this point, Deepak must build an **Arcane Graph** representing his current spell list, following these rules:
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+- **Each spell in the list is a node** in the graph.
+- **Spells of the same level** may be connected to form a **path** (an open, non-cyclic chain).
+- **Spells of the same school** and of consecutive levels may be connected, possibly forming **cycles** (closed loops).
 
-### Jekyll Themes
+Whenever Deepak casts a spell, the corresponding node vanishes from the Arcane Graph.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/artem-mateush/spell-map/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+If the result is that the graph splits into two or more disconnected subgraphs, **all nodes not in the largest subgraph vanish**. As part of the same casting action that caused the split:
+- Deepak must immediately cast up to two spells randomly chosen from the vanished nodes (excluding the spell just cast).
+- Targets are randomly chosen from valid options within range.
 
-### Support or Contact
+---
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### WEAVE TRANSMUTATION
+
+- Once per **short rest**, Deepak may cast a spell and substitute its **damage type** with that of another spell in the same cycle.  
+- Both corresponding nodes vanish, and spell slots for **both spells** are spent.
+
+---
+
+### WEAVE CRYSTALLIZATION
+
+- Once per **long rest**, Deepak may select a cycle on the Arcane Graph and perform a 10-minute ritual:
+    - All nodes of the selected cycle vanish.
+    - One vanished spell (of Deepak’s choice) is crystallized in an appropriate vessel, if available.
+
+- As an action or bonus action, Deepak may break a crystal to return the spell as a node on the Arcane Graph.
+    - This crystallized spell node can be connected to others, **ignoring the normal Arcane Graph rules**.
+
+---
+
+### WEAVE MASTERY
+
+- Once per **long rest**, Deepak may cast a spell and change one of its parameters (level, school, casting time, range, components, duration, damage type, saving throw/ability) with that of another spell in the same cycle.
+- Both nodes vanish, and spell slots for both are spent.
