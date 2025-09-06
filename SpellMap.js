@@ -307,16 +307,26 @@ function draw() {
     //ctx.fillStyle = "#888";
     //ctx.fillRect(0, 900, 900, 300);
     
+    // Higher grid multiplier equals denser grid
+    grid_multiplier = 2
+    grid_delta_x = 80 / grid_multiplier
+    grid_delta_y = 70 / grid_multiplier
+    grid_points_x = 15 * grid_multiplier
+    grid_points_y = 9 * grid_multiplier
+
     ctx.fillStyle = "#333";
-    for (i = 0; i < 9; i++) {
+    for (i = 0; i < grid_points_y; i++) {
         ctx.beginPath();
+        point_y = (i+0.5) * grid_delta_y
         if (i % 2 == 0) {
-            for (j = 0; j < 15; j++) { 
-                ctx.arc(j * 80 + 40, i * 70 + 35, 2, 0, 2 * Math.PI, false);
+            for (j = 0; j < grid_points_x; j++) {
+                point_x = (j+0.5) * grid_delta_x
+                ctx.arc(point_x, point_y, 2, 0, 2 * Math.PI, false);
             }
         } else {
-            for (j = 0; j < 14; j++) { 
-                ctx.arc(j * 80 + 80, i * 70 + 35, 2, 0, 2 * Math.PI, false);
+            for (j = 0; j < grid_points_x - 1; j++) { 
+                point_x = (j+1) * grid_delta_x
+                ctx.arc(point_x, point_y, 2, 0, 2 * Math.PI, false);
             }
         }
         ctx.fill();
