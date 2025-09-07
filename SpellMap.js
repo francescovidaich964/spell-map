@@ -308,11 +308,11 @@ function draw() {
     //ctx.fillRect(0, 900, 900, 300);
     
     // Higher grid multiplier equals denser grid
-    grid_multiplier = 2
+    grid_multiplier = 1.2
     grid_delta_x = 80 / grid_multiplier
     grid_delta_y = 70 / grid_multiplier
     grid_points_x = 15 * grid_multiplier
-    grid_points_y = 9 * grid_multiplier
+    grid_points_y = 8 * grid_multiplier
 
     ctx.fillStyle = "#333";
     for (i = 0; i < grid_points_y; i++) {
@@ -395,11 +395,18 @@ function draw() {
         buttons[i].draw();
     }
 
+    // Snap spell node to grid positions if not held with mousedown
     for (i = 0; i < spells.length; i++) {
         if (spells[i].y < 600 && !spells[i].held) {
-            spells[i].y = Math.round((spells[i].y - 17) / 70) * 70 + 35;
-            if (Math.round((spells[i].y - 17) / 70) % 2 == 0) spells[i].x = Math.round((spells[i].x - 40) / 80) * 80 + 40;
-            else spells[i].x = Math.round((spells[i].x - 20) / 80) * 80;
+            y_int = Math.round((spells[i].y - grid_delta_y/4) / grid_delta_y);
+            spells[i].y = (y_int + 0.5) * grid_delta_y;
+            if (y_int % 2 == 0) {
+                x_int = Math.round((spells[i].x - grid_delta_x/2) / grid_delta_x);
+                spells[i].x = (x_int + 0.5) * grid_delta_x;
+            } else {
+                x_int = Math.round((spells[i].x - grid_delta_x/4) / grid_delta_x);
+                spells[i].x = x_int * grid_delta_x;
+            }
         }
         if (spells[i].y < 600 || spells[i].school == menuSchool || spells[i].held || spells[i].highlight) spellDraw(spells[i]);
     }
