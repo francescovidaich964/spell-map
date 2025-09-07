@@ -300,6 +300,16 @@ buttons[buttons.length] = new button(1050, 575, 150, 25, "Transmutation");
 
 setInterval(draw, 1);
 
+
+// Higher grid multiplier equals denser grid
+var grid_multiplier = 1.2
+
+var grid_delta_x = 80 / grid_multiplier
+var grid_delta_y = 70 / grid_multiplier
+var grid_points_x = 15 * grid_multiplier
+var grid_points_y = 8 * grid_multiplier
+
+
 function draw() {
     ctx.fillStyle = "#555";
     ctx.fillRect(0, 0, 1200, 980);
@@ -307,13 +317,6 @@ function draw() {
     //ctx.fillStyle = "#888";
     //ctx.fillRect(0, 900, 900, 300);
     
-    // Higher grid multiplier equals denser grid
-    grid_multiplier = 1.2
-    grid_delta_x = 80 / grid_multiplier
-    grid_delta_y = 70 / grid_multiplier
-    grid_points_x = 15 * grid_multiplier
-    grid_points_y = 8 * grid_multiplier
-
     ctx.fillStyle = "#333";
     for (i = 0; i < grid_points_y; i++) {
         ctx.beginPath();
@@ -398,15 +401,10 @@ function draw() {
     // Snap spell node to grid positions if not held with mousedown
     for (i = 0; i < spells.length; i++) {
         if (spells[i].y < 600 && !spells[i].held) {
-            y_int = Math.round((spells[i].y - grid_delta_y/4) / grid_delta_y);
-            spells[i].y = (y_int + 0.5) * grid_delta_y;
-            if (y_int % 2 == 0) {
-                x_int = Math.round((spells[i].x - grid_delta_x/2) / grid_delta_x);
-                spells[i].x = (x_int + 0.5) * grid_delta_x;
-            } else {
-                x_int = Math.round((spells[i].x - grid_delta_x/4) / grid_delta_x);
-                spells[i].x = x_int * grid_delta_x;
-            }
+            spells[i].gridRow = Math.round((spells[i].y - grid_delta_y/4) / grid_delta_y);
+            spells[i].gridCol = Math.round((spells[i].x - grid_delta_x/4) / grid_delta_x);
+            spells[i].y = grid_delta_y/4 + spells[i].gridRow * grid_delta_y;
+            spells[i].x = grid_delta_x/4 + spells[i].gridCol * grid_delta_x;
         }
         if (spells[i].y < 600 || spells[i].school == menuSchool || spells[i].held || spells[i].highlight) spellDraw(spells[i]);
     }
@@ -832,4 +830,38 @@ document.onkeydown = function(e) {
 document.onkeyup = function(e) {
     e = window.event || e;
     var key = e.keyCode;
+}
+
+
+
+// Button logic
+document.getElementById('grid-plus').onclick = function() {
+  grid_multiplier = Math.min(5.0, grid_multiplier + 0.1);
+  updateGridAndPositions();
+};
+document.getElementById('grid-minus').onclick = function() {
+  grid_multiplier = Math.max(0.5, grid_multiplier - 0.1);
+  updateGridAndPositions();
+};
+
+// Update label and reposition all spells by their grid indices
+function updateGridAndPositions() {
+  document.getElementById('grid-mult-label').textContent = "Grid scale: " + grid_multiplier.toFixed(1);
+ 
+  // Recalculate grid step sizes
+  grid_delta_x = 80 / grid_multiplier;
+  grid_delta_y = 70 / grid_multiplier;
+  grid_points_x = 15 * grid_multiplier;
+  grid_points_y = 8 * grid_multiplier;
+
+  // Update all spells
+  for (let i = 0; i < spells.length; i++) {
+    // Only update if the spell has gridRow/gridCol
+    if (spells[i].gridRow === -1 || spells[i].gridCol === -1) {
+        spells[i].y = grid_delta_y/4 + spells[i].gridRow * grid_delta_y;
+        spells[i].x = grid_delta_x/4 + spells[i].gridCol * grid_delta_x;
+    }
+  }
+  // Optionally: redraw immediately
+  draw();
 }

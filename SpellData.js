@@ -1,3 +1,4 @@
+
 function spell(name, school, level, x, y) {
     this.name = name;
     this.school = school;
@@ -11,6 +12,8 @@ function spell(name, school, level, x, y) {
     this.whitelist = [];
     this.token = false;
     this.highlight = false;
+    this.gridRow = -1;
+    this.gridCol = -1;
 }
 
 var spellX = [

@@ -81,8 +81,16 @@
             <p><b>Highlight:</b> Drag to highlight multiple spells (blue text), which can be moved together in "move" mode. Cursor will be four blue arrows in this mode</p>
         </div>
 
+        <!-- Spell Map Canvas -->
         <canvas id="SpellMap" width="1200" height="980" style="border:5px solid #000;"></canvas>
-        
+
+        <!-- Grid Scale Controls -->
+        <div id="grid-controls" style="text-align:center; margin:10px;">
+        <button id="grid-minus" style="font-size:1.5em;">−</button>
+        <span id="grid-mult-label" style="margin:0 12px;">Grid scale: 2.0</span>
+        <button id="grid-plus" style="font-size:1.5em;">＋</button>
+        </div>
+
         <!-- Spell Filter Panel -->
         <div id="spellFilterPanel">
             <h4 style="margin-top: 0; color: white;">Filter Spells</h4>
