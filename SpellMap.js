@@ -12,6 +12,9 @@ var filteredSpells = []; // Store filtered spells
 var isFiltered = false;
 var isTextInputFocused = false;
 
+// Spell description cache and API functions
+var spellDescriptions = {};
+
 // Initialize allSpells with a copy of the original spells array
 function initializeSpells() {
     allSpells = spells.map(spell => ({
@@ -119,6 +122,205 @@ function resetSpells() {
     }));
     isFiltered = false;
     console.log("Reset to all spells");
+}
+
+// Try multiple APIs for spell descriptions
+async function fetchSpellDescription(spellName) {
+    // Clean spell name (remove UA suffix, fix formatting)
+    const cleanName = spellName.toLowerCase()
+        .replace(/\s*\(ua\)/, '')
+        .replace(/'/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '');
+    
+    // Check cache first (including unsuccessful results)
+    if (spellDescriptions[spellName]) {
+        return spellDescriptions[spellName];
+    }
+    
+    try {
+        // Try Open5e first (more comprehensive)
+        let response = await fetch(`https://api.open5e.com/spells/${cleanName}/`);
+        if (response.ok) {
+            const data = await response.json();
+            const spellData = {
+                name: data.name,
+                description: data.desc,
+                level: data.level,
+                school: data.school,
+                range: data.range,
+                duration: data.duration,
+                components: data.components,
+                casting_time: data.casting_time,
+                source: 'Open5e',
+                found: true  // Mark as successfully found
+            };
+            spellDescriptions[spellName] = spellData;
+            return spellData;
+        }
+        
+        // Fallback to D&D 5e API
+        response = await fetch(`https://www.dnd5eapi.co/api/spells/${cleanName}`);
+        if (response.ok) {
+            const data = await response.json();
+            const spellData = {
+                name: data.name,
+                description: data.desc ? data.desc.join(' ') : 'No description available',
+                level: data.level,
+                school: data.school?.name || 'Unknown',
+                range: data.range,
+                duration: data.duration,
+                components: data.components?.join(', ') || 'Unknown',
+                casting_time: data.casting_time,
+                source: 'D&D 5e API',
+                found: true  // Mark as successfully found
+            };
+            spellDescriptions[spellName] = spellData;
+            return spellData;
+        }
+        
+        // If not found in any API, create and cache unsuccessful result
+        const notFoundData = {
+            name: spellName,
+            description: 'FAILED - Spell description not available in public APIs.',
+            source: 'Not found',
+            found: false  // Mark as not found
+        };
+        spellDescriptions[spellName] = notFoundData;  // Cache the unsuccessful result
+        return notFoundData;
+        
+    } catch (error) {
+        console.error('Error fetching spell description:', error);
+        // Cache the error result too
+        const errorData = {
+            name: spellName,
+            description: 'Error loading spell description.',
+            source: 'Error',
+            found: false  // Mark as error
+        };
+        spellDescriptions[spellName] = errorData;  // Cache the error result
+        return errorData;
+    }
+}
+
+// Robust tooltip function that works on all screen sizes
+function showSpellTooltip(spell, x, y) {
+    // Remove existing tooltip
+    const existingTooltip = document.getElementById('spellTooltip');
+    if (existingTooltip) {
+        existingTooltip.remove();
+    }
+    
+    // Create tooltip
+    const tooltip = document.createElement('div');
+    tooltip.id = 'spellTooltip';
+    
+    // Initial positioning (will be adjusted)
+    tooltip.style.cssText = `
+        position: fixed;
+        left: ${x + 10}px;
+        top: ${y - 10}px;
+        background: #222;
+        color: white;
+        border: 2px solid #666;
+        border-radius: 5px;
+        padding: 10px;
+        max-width: 300px;
+        z-index: 1000;
+        font-size: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        visibility: hidden; /* Hide while we calculate position */
+    `;
+    
+    // Add to DOM temporarily to measure size
+    tooltip.innerHTML = 'Loading spell description...';
+    document.body.appendChild(tooltip);
+    
+    // Get tooltip dimensions and viewport size
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Calculate optimal position
+    let finalX = x + 10;
+    let finalY = y - 10;
+    
+    // Adjust horizontal position if tooltip goes off right edge
+    if (finalX + tooltipRect.width > viewportWidth) {
+        finalX = x - tooltipRect.width - 10; // Show on left side of cursor
+    }
+    
+    // Adjust horizontal position if tooltip goes off left edge
+    if (finalX < 0) {
+        finalX = 5; // Small margin from left edge
+    }
+    
+    // Adjust vertical position if tooltip goes off bottom edge
+    if (finalY + tooltipRect.height > viewportHeight) {
+        finalY = y - tooltipRect.height - 10; // Show above cursor
+    }
+    
+    // Adjust vertical position if tooltip goes off top edge
+    if (finalY < 0) {
+        finalY = 5; // Small margin from top
+    }
+    
+    // Apply final position and make visible
+    tooltip.style.left = `${finalX}px`;
+    tooltip.style.top = `${finalY}px`;
+    tooltip.style.visibility = 'visible';
+    
+    // Fetch and display spell description
+    fetchSpellDescription(spell.name).then(desc => {
+        const currentTooltip = document.getElementById('spellTooltip');
+        if (currentTooltip) {
+            let content;
+            if (desc.found) {
+                content = `
+                    <strong>${desc.name}</strong><br>
+                    <em>Level ${desc.level} ${desc.school}</em><br>
+                    <strong>Range:</strong> ${desc.range}<br>
+                    <strong>Duration:</strong> ${desc.duration}<br>
+                    <strong>Components:</strong> ${desc.components}<br>
+                    <strong>Casting Time:</strong> ${desc.casting_time}<br>
+                    <hr style="border: 1px solid #444; margin: 5px 0;">
+                    ${desc.description}<br>
+                    <small style="color: #888;">Source: ${desc.source}</small>
+                `;
+            } else {
+                content = `
+                    <strong>${desc.name}</strong><br>
+                    <hr style="border: 1px solid #444; margin: 5px 0;">
+                    ${desc.description}<br>
+                    <small style="color: #888;">Source: ${desc.source}</small>
+                `;
+            }
+            
+            currentTooltip.innerHTML = content;
+            
+            // Recalculate position after content change (content might be longer)
+            const newRect = currentTooltip.getBoundingClientRect();
+            let adjustedX = finalX;
+            let adjustedY = finalY;
+            
+            // Re-check boundaries with new content size
+            if (adjustedX + newRect.width > viewportWidth) {
+                adjustedX = x - newRect.width - 10;
+            }
+            if (adjustedX < 0) {
+                adjustedX = 5;
+            }
+            if (adjustedY + newRect.height > viewportHeight) {
+                adjustedY = y - newRect.height - 10;
+            }
+            if (adjustedY < 0) {
+                adjustedY = 5;
+            }
+            
+            currentTooltip.style.left = `${adjustedX}px`;
+            currentTooltip.style.top = `${adjustedY}px`;
+        }
+    });
 }
 
 
@@ -620,6 +822,27 @@ document.onmousemove = function(e) {
             else spells[i].highlight = false;
         }
     }
+
+    // Add spell tooltip on hover
+    let hoveredSpell = null;
+    for (let i = 0; i < spells.length; i++) {
+        if (Math.pow(Math.pow(mouseX - spells[i].x, 2) + Math.pow(mouseY - spells[i].y, 2), 0.5) < spells[i].r && 
+            (spells[i].y < 600 || spells[i].school == menuSchool || spells[i].held || spells[i].highlight)) {
+            hoveredSpell = spells[i];
+            break;
+        }
+    }
+    
+    if (hoveredSpell && !hoveredSpell.held) {
+        showSpellTooltip(hoveredSpell, e.clientX, e.clientY);
+    } else {
+        // Remove tooltip if not hovering
+        const existingTooltip = document.getElementById('spellTooltip');
+        if (existingTooltip) {
+            existingTooltip.remove();
+        }
+    }
+
 }
 
 document.onmousedown = function(e) {
