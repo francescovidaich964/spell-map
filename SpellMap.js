@@ -203,6 +203,37 @@ async function fetchSpellDescription(spellName) {
     }
 }
 
+// Function to convert markdown-like formatting to HTML
+function formatSpellDescription(text) {
+    if (!text) return 'No description available';
+    
+    let formatted = text;
+    
+    // Convert **bold** to <strong>
+    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Convert *italic* to <em>
+    formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    
+    // Convert _underline_ to <u> (if present)
+    formatted = formatted.replace(/_(.*?)_/g, '<u>$1</u>');
+    
+    // Convert bullet points
+    formatted = formatted.replace(/^• /gm, '• ');
+    formatted = formatted.replace(/^\* /gm, '• ');
+    formatted = formatted.replace(/^- /gm, '• ');
+    
+    // Convert line breaks to proper HTML breaks
+    formatted = formatted.replace(/\n\n/g, '<br><br>');
+    formatted = formatted.replace(/\n/g, '<br>');
+    
+    // Clean up extra spaces
+    formatted = formatted.replace(/\s+/g, ' ').trim();
+    
+    return formatted;
+}
+
+
 // Robust tooltip function that works on all screen sizes
 function showSpellTooltip(spell, x, y) {
     // Remove existing tooltip
@@ -284,14 +315,14 @@ function showSpellTooltip(spell, x, y) {
                     <strong>Components:</strong> ${desc.components}<br>
                     <strong>Casting Time:</strong> ${desc.casting_time}<br>
                     <hr style="border: 1px solid #444; margin: 5px 0;">
-                    ${desc.description}<br>
+                    ${formatSpellDescription(desc.description)}<br>
                     <small style="color: #888;">Source: ${desc.source}</small>
                 `;
             } else {
                 content = `
                     <strong>${desc.name}</strong><br>
                     <hr style="border: 1px solid #444; margin: 5px 0;">
-                    ${desc.description}<br>
+                    ${formatSpellDescription(desc.description)}<br>
                     <small style="color: #888;">Source: ${desc.source}</small>
                 `;
             }
