@@ -122,6 +122,45 @@ function resetSpells() {
 }
 
 
+// Function to download spell arrangement as JSON file
+function downloadSpellArrangement(filename, data) {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Function to upload spell arrangement from JSON file
+function uploadSpellArrangement(callback) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    callback(data);
+                } catch (error) {
+                    alert('Error reading file: Invalid JSON format');
+                    console.error('JSON parse error:', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+    };
+    input.click();
+}
+
+
+
 // Update your DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', function() {
     initializeSpells();
@@ -776,32 +815,60 @@ document.onkeydown = function(e) {
         addSelect = "";
     }
 
-    if (key === 83) { //s
+    // Update the keyboard event handler for save (S key) and load (O key)
+    // Replace the existing save/load code in your onkeydown function:
+    if (key === 83) { //s - Save
         var usedSpells = [];
         for (i = 0; i < spells.length; i++) {
             if (spells[i].y < 440) {
                 usedSpells[usedSpells.length] = spells[i];
             }
         }
-        createCookie(window.prompt("What would you like to save this arrangement as (must use exact name to load)?"), JSON.stringify(usedSpells), false);
-    } else if (key === 79) { //o
-        usedSpells = JSON.parse(getCookie(window.prompt("What arrangement would you like to load (must use exact name to load)?")));
-        for (i = 0; i < spells.length; i++) {
-            var isUsed = false;
-            for (j = 0; j < usedSpells.length; j++) {
-                if (spells[i].name == usedSpells[j].name) {
-                    spells[i] = usedSpells[j];
-                    isUsed = true;
-                    break;
-                }
-            }
-            if (!isUsed) {
+        
+        // Prompt for filename
+        const filename = window.prompt("Enter filename for spell arrangement:");
+        if (filename) {
+            downloadSpellArrangement(filename, usedSpells);
+            console.log(`Saved ${usedSpells.length} spells to ${filename}.json`);
+        }
+        
+    } else if (key === 79) { //o - Open/Load
+        uploadSpellArrangement(function(usedSpells) {
+            // Reset all spells first
+            for (i = 0; i < spells.length; i++) {
                 spells[i].x = spells[i].homeX;
                 spells[i].y = spells[i].homeY;
                 spells[i].token = false;
                 spells[i].highlight = false;
+                spells[i].whitelist = [];
             }
-        }
+            
+            // Apply loaded spell arrangement
+            for (i = 0; i < spells.length; i++) {
+                var isUsed = false;
+                for (j = 0; j < usedSpells.length; j++) {
+                    if (spells[i].name == usedSpells[j].name) {
+                        // Preserve the spell object but update its properties
+                        spells[i].x = usedSpells[j].x;
+                        spells[i].y = usedSpells[j].y;
+                        spells[i].token = usedSpells[j].token || false;
+                        spells[i].whitelist = usedSpells[j].whitelist || [];
+                        spells[i].gridRow = usedSpells[j].gridRow || -1;
+                        spells[i].gridCol = usedSpells[j].gridCol || -1;
+                        isUsed = true;
+                        break;
+                    }
+                }
+                if (!isUsed) {
+                    spells[i].x = spells[i].homeX;
+                    spells[i].y = spells[i].homeY;
+                    spells[i].token = false;
+                    spells[i].highlight = false;
+                    spells[i].whitelist = [];
+                }
+            }
+            console.log(`Loaded ${usedSpells.length} spells from file`);
+        });
     } else if (key === 38) { //up
         for (i = 0; i < spells.length; i++) {
             if (spells[i].highlight) {
