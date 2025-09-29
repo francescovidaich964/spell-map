@@ -124,7 +124,196 @@ function resetSpells() {
     console.log("Reset to all spells");
 }
 
-// Try multiple APIs for spell descriptions
+
+// Parser for dnd5e.wikidot.com spell pages
+async function parseWikidotSpell(spellName) {
+    const cleanName = spellName.toLowerCase()
+        .replace(/\s*\(ua\)/, '')
+        .replace(/[^a-z0-9\s]/g, '')
+        .replace(/\s+/g, '-');
+    
+    const url = `https://dnd5e.wikidot.com/spell:${cleanName}`;
+    
+    try {
+        // Use a CORS proxy to fetch the HTML
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        const response = await fetch(proxyUrl);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const htmlContent = data.contents;
+        
+        // Create a temporary DOM element to parse HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+        
+        // Extract spell information based on the structure
+        const spellInfo = extractSpellFromWikidot(tempDiv, spellName);
+        
+        if (spellInfo) {
+            return {
+                name: spellInfo.name,
+                description: spellInfo.description,
+                level: spellInfo.level,
+                school: spellInfo.school,
+                range: spellInfo.range,
+                duration: spellInfo.duration,
+                components: spellInfo.components,
+                casting_time: spellInfo.casting_time,
+                source: 'Wikidot',
+                found: true
+            };
+        }
+        
+        return null;
+    } catch (error) {
+        console.error('Error parsing Wikidot spell:', error);
+        return null;
+    }
+}
+
+// Extract spell details from Wikidot HTML structure
+function extractSpellFromWikidot(htmlElement, spellName) {
+    try {
+
+        // Convert URL-style name back to proper title case
+        const title = spellName
+            .split(/[-\s]+/)
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+        
+        // Extract spell level and school from the subtitle
+        let level = 'Unknown';
+        let school = 'Unknown';
+        
+        const subtitleElements = htmlElement.querySelectorAll('p, div');
+        for (let element of subtitleElements) {
+            const text = element.textContent.trim();
+            
+            // Look for pattern like "1st-level abjuration" or "Cantrip evocation"
+            const levelSchoolMatch = text.match(/(?:(\d+)(?:st|nd|rd|th)-level|cantrip)\s+(\w+)/i);
+            if (levelSchoolMatch) {
+                level = levelSchoolMatch[1] ? parseInt(levelSchoolMatch[1]) : 0;
+                school = levelSchoolMatch[2];
+                break;
+            }
+        }
+        
+        // Extract spell statistics (Casting Time, Range, Components, Duration)
+        let casting_time = 'Unknown';
+        let range = 'Unknown';
+        let components = 'Unknown';
+        let duration = 'Unknown';
+        
+        // Look for the characteristic bold labels
+        const strongElements = htmlElement.querySelectorAll('strong');
+        
+        for (let strongEl of strongElements) {
+            const label = strongEl.textContent.trim().toLowerCase();
+            const nextSibling = strongEl.nextSibling;
+            
+            if (nextSibling && nextSibling.textContent) {
+                const value = nextSibling.textContent.replace(/^:\s*/, '').trim();
+                
+                if (label.includes('casting time')) {
+                    casting_time = value;
+                } else if (label.includes('range')) {
+                    range = value;
+                } else if (label.includes('components')) {
+                    components = value;
+                } else if (label.includes('duration')) {
+                    duration = value;
+                }
+            }
+        }
+        
+        // Extract the main spell description
+        let description = '';
+        let foundDescription = false;
+        
+        // Find the main content area (usually after the stats)
+        const allParagraphs = htmlElement.querySelectorAll('p');
+        
+        for (let i = 0; i < allParagraphs.length; i++) {
+            const paragraph = allParagraphs[i];
+            const text = paragraph.textContent.trim();
+            
+            // Skip empty paragraphs and stat lines
+            if (!text || 
+                text.includes('Casting Time:') || 
+                text.includes('Range:') ||
+                text.includes('Components:') ||
+                text.includes('Duration:') ||
+                text.includes('Source:') ||
+                text.includes('Spell Lists:')) {
+                continue;
+            }
+            
+            // Skip the level/school line
+            if (text.match(/(?:\d+(?:st|nd|rd|th)-level|cantrip)\s+\w+/i)) {
+                foundDescription = true; // Start collecting after this
+                continue;
+            }
+            
+            // Collect description paragraphs
+            if (foundDescription && text.length > 20) {
+                if (description) {
+                    description += '\n\n' + text;
+                } else {
+                    description = text;
+                }
+            }
+        }
+        
+        // If no description found, try a different approach
+        if (!description) {
+            const contentDiv = htmlElement.querySelector('#page-content, .content, .main-content');
+            if (contentDiv) {
+                // Get all text but filter out navigation and metadata
+                const textNodes = [];
+                const walker = document.createTreeWalker(
+                    contentDiv,
+                    NodeFilter.SHOW_TEXT,
+                    null,
+                    false
+                );
+                
+                let node;
+                while (node = walker.nextNode()) {
+                    const text = node.textContent.trim();
+                    if (text.length > 20 && 
+                        !text.includes('Source:') && 
+                        !text.includes('Spell Lists:')) {
+                        textNodes.push(text);
+                    }
+                }
+                
+                description = textNodes.slice(1, -1).join('\n\n'); // Skip first/last (usually metadata)
+            }
+        }
+        
+        return {
+            name: title,
+            level: level,
+            school: school,
+            casting_time: casting_time,
+            range: range,
+            components: components,
+            duration: duration,
+            description: description || 'Description could not be parsed from the page.'
+        };
+        
+    } catch (error) {
+        console.error('Error extracting spell from Wikidot:', error);
+        return null;
+    }
+}
+
+
+// Updated fetch function with Wikidot fallback
 async function fetchSpellDescription(spellName) {
     // Clean spell name (remove UA suffix, fix formatting)
     const cleanName = spellName.toLowerCase()
@@ -133,13 +322,13 @@ async function fetchSpellDescription(spellName) {
         .replace(/\s+/g, '-')
         .replace(/[^a-z0-9-]/g, '');
     
-    // Check cache first (including unsuccessful results)
+    // Check cache first
     if (spellDescriptions[spellName]) {
         return spellDescriptions[spellName];
     }
     
     try {
-        // Try Open5e first (more comprehensive)
+        // Try Open5e first
         let response = await fetch(`https://api.open5e.com/spells/${cleanName}/`);
         if (response.ok) {
             const data = await response.json();
@@ -159,7 +348,7 @@ async function fetchSpellDescription(spellName) {
             return spellData;
         }
         
-        // Fallback to D&D 5e API
+        // Try D&D 5e API
         response = await fetch(`https://www.dnd5eapi.co/api/spells/${cleanName}`);
         if (response.ok) {
             const data = await response.json();
@@ -179,14 +368,22 @@ async function fetchSpellDescription(spellName) {
             return spellData;
         }
         
-        // If not found in any API, create and cache unsuccessful result
+        // Try Wikidot as fallback
+        console.log(`Trying Wikidot for spell: ${spellName}`);
+        const wikidotResult = await parseWikidotSpell(spellName);
+        if (wikidotResult) {
+            spellDescriptions[spellName] = wikidotResult;
+            return wikidotResult;
+        }
+        
+        // If nothing found, cache unsuccessful result
         const notFoundData = {
             name: spellName,
-            description: 'FAILED - Spell description not available in public APIs.',
+            description: 'FAILED - Spell description not found.',
             source: 'Not found',
             found: false  // Mark as not found
         };
-        spellDescriptions[spellName] = notFoundData;  // Cache the unsuccessful result
+        // spellDescriptions[spellName] = notFoundData;  // Cache the unsuccessful result
         return notFoundData;
         
     } catch (error) {
@@ -198,12 +395,12 @@ async function fetchSpellDescription(spellName) {
             source: 'Error',
             found: false  // Mark as error
         };
-        spellDescriptions[spellName] = errorData;  // Cache the error result
+        // spellDescriptions[spellName] = errorData;  // Cache the error result
         return errorData;
     }
 }
 
-// Function to convert markdown-like formatting to HTML
+// Enhanced spell description formatter
 function formatSpellDescription(text) {
     if (!text) return 'No description available';
     
@@ -215,8 +412,18 @@ function formatSpellDescription(text) {
     // Convert *italic* to <em>
     formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
     
-    // Convert _underline_ to <u> (if present)
-    formatted = formatted.replace(/_(.*?)_/g, '<u>$1</u>');
+    // Handle special D&D formatting
+    // Convert "At Higher Levels." to bold
+    formatted = formatted.replace(/At Higher Levels\./g, '<strong>At Higher Levels.</strong>');
+    
+    // // Convert damage dice to monospace
+    // formatted = formatted.replace(/(\d+d\d+)/g, '<code>$1</code>');
+    
+    // Convert ability scores to bold
+    formatted = formatted.replace(/\b(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\b/g, '<strong>$1</strong>');
+    
+    // Convert saving throws to bold
+    formatted = formatted.replace(/\b(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw/g, '<strong>$1 saving throw</strong>');
     
     // Convert bullet points
     formatted = formatted.replace(/^• /gm, '• ');
