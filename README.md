@@ -1,5 +1,7 @@
 # D&D School of Geometry Spell Graph Builder
 
+this is feature 2
+
 This project provides a web-based visual tool for creating and managing spell graphs, designed for the custom D&D 5e subclass of Deepak (Avalis DnD Campaign) and inspired by [School of Geometry](https://homebrewery.naturalcrit.com/share/SkwZBBxO-).
 
 ### Project Purpose
