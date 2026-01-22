@@ -65,5 +65,4 @@ If the result is that the graph splits into two or more disconnected subgraphs, 
 ## TODOs
 
 - When _Weave Cristallization_, allow for a node to be attached to the graph ignoring the normal Arcane Graph rules (maybe use the hexagon that is already present to mark these nodes). Maybe add a button and add that info to the json state to write if it was alreay used;
-- added another todo
 - Add to the Frontend a spell slot counter, and save the num of tot spells and available ones in the state json.
