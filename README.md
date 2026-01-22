@@ -4,6 +4,8 @@ this is feature1
 
 This project provides a web-based visual tool for creating and managing spell graphs, designed for the custom D&D 5e subclass of Deepak (Avalis DnD Campaign) and inspired by [School of Geometry](https://homebrewery.naturalcrit.com/share/SkwZBBxO-).
 
+this is feature 3 - in theory no conflicts
+
 ### Project Purpose
 
 - Visual interactive spell graph based on the daily randomized spell list.
