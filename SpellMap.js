@@ -703,6 +703,8 @@ function spellDraw(spell) {
     ctx.arc(spell.x + spell.r / 2, spell.y - spell.r / 2, spell.r / 7, 0, 2 * Math.PI, false);
     ctx.fillStyle = 'white';
     ctx.fill();
+    // Draw hexagon for crystallized spells (from Weave Crystallization feature)
+    // Crystallized spells can link to any node, bypassing normal Arcane Graph rules
     if (spell.token) {
         ctx.fillStyle = "orange";
         ctx.beginPath();
@@ -868,7 +870,7 @@ function draw() {
     ctx.textAlign = "left";
     ctx.fillText("Spells prepared: " + preparedCount, 5, 15);
     ctx.fillText("Cantrips known: " + cantripCount, 5, 30);
-    ctx.fillText("Token Count: " + tokenCount, 5, 45);
+    ctx.fillText("Crystallized Spells: " + tokenCount, 5, 45);
 
     for (i = 0; i < buttons.length; i++) {
         buttons[i].draw();
@@ -1114,7 +1116,11 @@ document.onmousedown = function(e) {
                             if (spells[j].name == addSelect) {
                                 // Check if linking is allowed based on your rules
                                 var canLink = false;
-                                if (spells[i].level == spells[j].level) {
+
+                                // If either spell is crystallized (from Weave Crystallization), bypass all constraints
+                                if (spells[i].token || spells[j].token) {
+                                    canLink = true;
+                                } else if (spells[i].level == spells[j].level) {
                                     // Same level spells can always be linked (any school)
                                     canLink = true;
                                 } else if (spells[i].school == spells[j].school && Math.abs(spells[i].level - spells[j].level) == 1) {

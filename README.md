@@ -62,5 +62,5 @@ If the result is that the graph splits into two or more disconnected subgraphs, 
 
 ## TODOs
 
-- When _Weave Cristallization_, allow for a node to be attached to the graph ignoring the normal Arcane Graph rules (maybe use the hexagon that is already present to mark these nodes). Maybe add a button and add that info to the json state to write if it was alreay used;
+- ✅ **[COMPLETED]** When _Weave Crystallization_, allow for a node to be attached to the graph ignoring the normal Arcane Graph rules. Implemented using hexagon markers (press C key to toggle). Crystallized spells can link to any node regardless of level/school constraints. Token state is saved in JSON files.
 - Add to the Frontend a spell slot counter, and save the num of tot spells and available ones in the state json.
