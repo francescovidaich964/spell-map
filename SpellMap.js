@@ -1287,7 +1287,7 @@ document.onkeydown = function(e) {
     if (key === 83) { //s - Save
         var usedSpells = [];
         for (i = 0; i < spells.length; i++) {
-            if (spells[i].y < 440) {
+            if (spells[i].y < 600) {
                 usedSpells[usedSpells.length] = spells[i];
             }
         }
