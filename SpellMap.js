@@ -677,6 +677,12 @@ var preparedCount = 0;
 var cantripCount = 0;
 var tokenCount = 0;
 
+// Spell slot tracking
+var spellSlots = {
+    maxSlots: [0, 0, 0, 0, 0, 0, 0, 0, 0],    // levels 1-9
+    usedSlots: [[], [], [], [], [], [], [], [], []]  // array of boolean arrays
+};
+
 var colors = new Map();
 
 colors.set("Abjuration", "deepskyblue");
@@ -768,6 +774,131 @@ button.prototype.draw = function() {
     }
     ctx.fillText(this.school, this.x + this.w / 2, this.y + this.h * 3 / 4);
 }
+
+function drawSpellSlots() {
+    ctx.font = "bold 12px Verdana";
+    ctx.textAlign = "left";
+
+    for (var level = 0; level < 9; level++) {
+        var maxSlots = spellSlots.maxSlots[level];
+        if (maxSlots === 0) continue; // Skip levels with no slots configured
+
+        var y = 95 + level * 25;
+
+        // Draw level label
+        ctx.fillStyle = "white";
+        ctx.fillText("Lvl " + (level + 1) + ":", 5, y);
+
+        // Draw each slot circle
+        for (var slot = 0; slot < maxSlots; slot++) {
+            var x = 55 + slot * 18;
+            var isAvailable = spellSlots.usedSlots[level][slot];
+
+            ctx.beginPath();
+            ctx.arc(x, y - 4, 8, 0, 2 * Math.PI, false);
+
+            if (isAvailable) {
+                // Available/unused slot: gold filled
+                ctx.fillStyle = "gold";
+                ctx.fill();
+            } else {
+                // Used/spent slot: white outline
+                ctx.strokeStyle = "white";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        }
+    }
+
+    // Reset stroke style to black to avoid affecting cursor
+    ctx.strokeStyle = "black";
+}
+
+function checkSlotClick(mouseX, mouseY) {
+    for (var level = 0; level < 9; level++) {
+        var maxSlots = spellSlots.maxSlots[level];
+        if (maxSlots === 0) continue;
+
+        var y = 95 + level * 25;
+
+        for (var slot = 0; slot < maxSlots; slot++) {
+            var x = 55 + slot * 18;
+            var distance = Math.sqrt(Math.pow(mouseX - x, 2) + Math.pow(mouseY - (y - 4), 2));
+
+            if (distance < 8) {
+                // Toggle this specific slot
+                spellSlots.usedSlots[level][slot] = !spellSlots.usedSlots[level][slot];
+                return true; // Click handled
+            }
+        }
+    }
+    return false; // No slot clicked
+}
+
+function showSlotConfigModal() {
+    var modal = document.getElementById('slotConfigModal');
+
+    // Populate inputs with current values
+    for (var i = 0; i < 9; i++) {
+        var input = document.getElementById('slotLevel' + (i + 1));
+        input.value = spellSlots.maxSlots[i];
+    }
+
+    modal.style.display = 'flex';
+}
+
+function hideSlotConfigModal() {
+    var modal = document.getElementById('slotConfigModal');
+    modal.style.display = 'none';
+}
+
+function saveSlotConfig() {
+    // Read inputs and update spellSlots
+    for (var i = 0; i < 9; i++) {
+        var input = document.getElementById('slotLevel' + (i + 1));
+        var value = parseInt(input.value) || 0;
+
+        // Validate range
+        if (value < 0) value = 0;
+        if (value > 12) value = 12;
+
+        var oldMaxSlots = spellSlots.maxSlots[i];
+        spellSlots.maxSlots[i] = value;
+
+        // Initialize usedSlots array for this level
+        // If adding new slots, start them all as filled (true)
+        // If keeping existing slots, preserve their state
+        if (value > oldMaxSlots) {
+            // Adding new slots - keep old ones, fill new ones
+            if (!spellSlots.usedSlots[i]) {
+                spellSlots.usedSlots[i] = [];
+            }
+            for (var j = oldMaxSlots; j < value; j++) {
+                spellSlots.usedSlots[i][j] = true; // New slots start filled
+            }
+        } else {
+            // Same or fewer slots - just truncate if needed
+            spellSlots.usedSlots[i] = spellSlots.usedSlots[i] || [];
+            spellSlots.usedSlots[i].length = value;
+        }
+
+        // If this is the first time configuring this level, fill all slots
+        if (oldMaxSlots === 0 && value > 0) {
+            spellSlots.usedSlots[i] = [];
+            for (var j = 0; j < value; j++) {
+                spellSlots.usedSlots[i][j] = true; // All slots start filled
+            }
+        }
+    }
+
+    hideSlotConfigModal();
+}
+
+// Setup modal event listeners after DOM loads
+window.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('slotConfigSave').addEventListener('click', saveSlotConfig);
+    document.getElementById('slotConfigCancel').addEventListener('click', hideSlotConfigModal);
+});
 
 var buttons = [];
 buttons[buttons.length] = new button(0, 575, 150, 25, "Abjuration");
@@ -868,9 +999,12 @@ function draw() {
     ctx.fillStyle = "white";
     ctx.font = "bold 12px Verdana";
     ctx.textAlign = "left";
-    ctx.fillText("Spells prepared: " + preparedCount, 5, 15);
-    ctx.fillText("Cantrips known: " + cantripCount, 5, 30);
-    ctx.fillText("Crystallized Spells: " + tokenCount, 5, 45);
+    ctx.fillText("Spells prepared: " + preparedCount, 5, 20);
+    ctx.fillText("Cantrips known: " + cantripCount, 5, 45);
+    ctx.fillText("Crystallized Spells: " + tokenCount, 5, 70);
+
+    // Draw spell slot tracker
+    drawSpellSlots();
 
     for (i = 0; i < buttons.length; i++) {
         buttons[i].draw();
@@ -1087,6 +1221,12 @@ document.onmousemove = function(e) {
 
 document.onmousedown = function(e) {
     e = window.event || e;
+
+    // Check spell slots first (before spell node checking)
+    if (checkSlotClick(mouseX, mouseY)) {
+        return; // Stop event propagation
+    }
+
     var onSpell = false;
     for (i = spells.length - 1; i >= 0; i--) {
         if (Math.pow(Math.pow(mouseX - spells[i].x, 2) + Math.pow(mouseY - spells[i].y, 2), 0.5) < spells[i].r && (spells[i].y < 600 || spells[i].school == menuSchool)) {
@@ -1242,12 +1382,13 @@ document.onmouseup = function(e) {
 document.onkeydown = function(e) {
     e = window.event || e;
     var key = e.keyCode;
-    
-    // Don't process spell map controls if text input is focused
-    if (isTextInputFocused) {
+
+    // Don't process spell map controls if text input is focused or modal is open
+    var modalOpen = document.getElementById('slotConfigModal').style.display === 'flex';
+    if (isTextInputFocused || modalOpen) {
         return; // Allow normal text input behavior - DON'T call preventDefault
     }
-    
+
     // Only prevent default if we're handling spell map controls
     e.preventDefault(); 
     
@@ -1282,6 +1423,10 @@ document.onkeydown = function(e) {
         addSelect = "";
     }
 
+    if (key === 76) { //l - Configure spell slots
+        showSlotConfigModal();
+    }
+
     // Update the keyboard event handler for save (S key) and load (O key)
     // Replace the existing save/load code in your onkeydown function:
     if (key === 83) { //s - Save
@@ -1291,16 +1436,28 @@ document.onkeydown = function(e) {
                 usedSpells[usedSpells.length] = spells[i];
             }
         }
-        
+
+        // Create save data with spells and spell slots
+        var saveData = {
+            spells: usedSpells,
+            spellSlots: {
+                maxSlots: spellSlots.maxSlots,
+                usedSlots: spellSlots.usedSlots
+            }
+        };
+
         // Prompt for filename
         const filename = window.prompt("Enter filename for spell arrangement:");
         if (filename) {
-            downloadSpellArrangement(filename, usedSpells);
-            console.log(`Saved ${usedSpells.length} spells to ${filename}.json`);
+            downloadSpellArrangement(filename, saveData);
+            console.log(`Saved ${usedSpells.length} spells and spell slot configuration to ${filename}.json`);
         }
         
     } else if (key === 79) { //o - Open/Load
-        uploadSpellArrangement(function(usedSpells) {
+        uploadSpellArrangement(function(data) {
+            // Handle both old format (array) and new format (object with spells and spellSlots)
+            var usedSpells = Array.isArray(data) ? data : data.spells;
+
             // Reset all spells first
             for (i = 0; i < spells.length; i++) {
                 spells[i].x = spells[i].homeX;
@@ -1309,7 +1466,24 @@ document.onkeydown = function(e) {
                 spells[i].highlight = false;
                 spells[i].whitelist = [];
             }
-            
+
+            // Restore spell slots if present
+            if (data.spellSlots) {
+                spellSlots.maxSlots = data.spellSlots.maxSlots || [0, 0, 0, 0, 0, 0, 0, 0, 0];
+                spellSlots.usedSlots = data.spellSlots.usedSlots || [[], [], [], [], [], [], [], [], []];
+
+                // Ensure usedSlots arrays exist for each level
+                for (var level = 0; level < 9; level++) {
+                    if (!spellSlots.usedSlots[level]) {
+                        spellSlots.usedSlots[level] = [];
+                        for (var slot = 0; slot < spellSlots.maxSlots[level]; slot++) {
+                            spellSlots.usedSlots[level][slot] = false;
+                        }
+                    }
+                }
+                console.log('Restored spell slot configuration');
+            }
+
             // Apply loaded spell arrangement
             for (i = 0; i < spells.length; i++) {
                 var isUsed = false;

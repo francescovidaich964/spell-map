@@ -69,6 +69,8 @@
             <p><b>X:</b> Toggle "delete" mode</p>
             <p><b>C:</b> Toggle "crystallized spell" mode</p>
             <p><b>V:</b> Toggle "highlight" mode</p>
+            <p><b>L:</b> Configure spell slots per level</p>
+            <p><b>Click spell slot circles:</b> Toggle used/available</p>
             <p><b>S:</b> Save a spell map</p>
             <p><b>O:</b> Open a saved spell map</p>
         </div>
@@ -92,6 +94,53 @@
             <br>
             <button id="filterButton">Apply Filter</button>
             <button id="resetButton">Reset All</button>
+        </div>
+
+        <!-- Spell Slot Configuration Modal -->
+        <div id="slotConfigModal" style="display:none;">
+            <div id="slotConfigContent">
+                <h3>Configure Spell Slots</h3>
+                <div class="slot-config-row">
+                    <label>Level 1:</label>
+                    <input type="number" id="slotLevel1" min="0" max="12" value="0">
+                </div>
+                <div class="slot-config-row">
+                    <label>Level 2:</label>
+                    <input type="number" id="slotLevel2" min="0" max="12" value="0">
+                </div>
+                <div class="slot-config-row">
+                    <label>Level 3:</label>
+                    <input type="number" id="slotLevel3" min="0" max="12" value="0">
+                </div>
+                <div class="slot-config-row">
+                    <label>Level 4:</label>
+                    <input type="number" id="slotLevel4" min="0" max="12" value="0">
+                </div>
+                <div class="slot-config-row">
+                    <label>Level 5:</label>
+                    <input type="number" id="slotLevel5" min="0" max="12" value="0">
+                </div>
+                <div class="slot-config-row">
+                    <label>Level 6:</label>
+                    <input type="number" id="slotLevel6" min="0" max="12" value="0">
+                </div>
+                <div class="slot-config-row">
+                    <label>Level 7:</label>
+                    <input type="number" id="slotLevel7" min="0" max="12" value="0">
+                </div>
+                <div class="slot-config-row">
+                    <label>Level 8:</label>
+                    <input type="number" id="slotLevel8" min="0" max="12" value="0">
+                </div>
+                <div class="slot-config-row">
+                    <label>Level 9:</label>
+                    <input type="number" id="slotLevel9" min="0" max="12" value="0">
+                </div>
+                <div class="slot-config-buttons">
+                    <button id="slotConfigSave">Save</button>
+                    <button id="slotConfigCancel">Cancel</button>
+                </div>
+            </div>
         </div>
 
         <script src="SpellData.js"></script>
