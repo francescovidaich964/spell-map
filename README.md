@@ -60,7 +60,18 @@ If the result is that the graph splits into two or more disconnected subgraphs, 
 
 ---
 
-## TODOs
+## Local Development
 
-- ✅ **[COMPLETED]** When _Weave Crystallization_, allow for a node to be attached to the graph ignoring the normal Arcane Graph rules. Implemented using hexagon markers (press C key to toggle). Crystallized spells can link to any node regardless of level/school constraints. Token state is saved in JSON files.
-- Add to the Frontend a spell slot counter, and save the num of tot spells and available ones in the state json.
+To run this application locally during development:
+
+1. **Start the local development server:**
+   - **Windows:** Double-click `start-server.bat` or run `python -m http.server 8000` in terminal
+   - **Mac/Linux:** Run `python3 -m http.server 8000` in terminal
+
+2. **Open your browser** and navigate to: `http://localhost:8000`
+
+3. **Stop the server** when done:
+   - **Windows:** Double-click `stop-server.bat` or press `Ctrl+C` in terminal
+   - **Mac/Linux:** Press `Ctrl+C` in terminal
+
+> **Note:** A local server is required for development because the application uses ES6 modules, which require HTTP/HTTPS protocol (not `file://`). When deployed to GitHub Pages, it works directly without any server setup.
