@@ -1192,7 +1192,7 @@ document.onmousemove = function(e) {
             var y1 = Math.min(originY, mouseY);
             var x2 = Math.max(originX, mouseX);
             var y2 = Math.max(originY, mouseY);
-            if (spells[i].x > x1 && spells[i].x < x2 && spells[i].y > y1 && spells[i].y < y2 && (spells[i].y < 440 || spells[i].school == menuSchool)) spells[i].highlight = true;
+            if (spells[i].x > x1 && spells[i].x < x2 && spells[i].y > y1 && spells[i].y < y2 && (spells[i].y < 600 || spells[i].school == menuSchool)) spells[i].highlight = true;
             else spells[i].highlight = false;
         }
     }
