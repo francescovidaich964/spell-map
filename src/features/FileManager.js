@@ -28,8 +28,9 @@ export class FileManager {
    *
    * @param {AppState} appState - Application state
    */
-  constructor(appState) {
+  constructor(appState, apiClient) {
     this.appState = appState;
+    this.apiClient = apiClient;
   }
 
   /**
@@ -56,7 +57,8 @@ export class FileManager {
           homeY: spell.homeY,
           whitelist: [...spell.whitelist],
           token: spell.token,
-          highlight: spell.highlight
+          highlight: spell.highlight,
+          cachedDescription: this.apiClient?.cache[spell.name] || null
         });
       }
     }
@@ -119,6 +121,15 @@ export class FileManager {
 
     if (!usedSpells || !Array.isArray(usedSpells)) {
       throw new Error('Invalid save file format: spells array not found');
+    }
+
+    // Restore API cache from saved descriptions
+    if (this.apiClient) {
+      for (const savedSpell of usedSpells) {
+        if (savedSpell.cachedDescription && !this.apiClient.cache[savedSpell.name]) {
+          this.apiClient.cache[savedSpell.name] = savedSpell.cachedDescription;
+        }
+      }
     }
 
     // Reset all spells first

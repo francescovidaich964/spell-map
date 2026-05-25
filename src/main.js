@@ -63,7 +63,7 @@ function initializeApp() {
   const spellFilter = new SpellFilter(appState);
   const spellSlotManager = new SpellSlotManager(appState);
   const tooltipManager = new TooltipManager(appState, apiClient);
-  const fileManager = new FileManager(appState);
+  const fileManager = new FileManager(appState, apiClient);
 
   // Initialize spell filter with all spells
   spellFilter.initializeAllSpells(initialSpells);
